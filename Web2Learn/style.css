@@ -1,0 +1,687 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,body{
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    background:linear-gradient(to top, #34838F, #A3D7DC);
+}
+
+body{
+    margin: 0;
+}
+
+header{
+   display: flex;
+    align-items: center;
+    justify-content:flex-start;
+    gap: 12px;
+    padding: 18px 28px;   
+}
+
+
+main{
+    display: grid;
+    grid-template-columns: 1.1fr 2fr;
+    grid-template-rows: auto auto;
+    column-gap: 20px;
+    row-gap: 0;
+    align-items: start;
+    padding: 0 20px 20px;   
+
+    min-height: calc(100vh - 80px);
+}
+
+
+
+.selected-sensor{
+    grid-column: 1/-1;
+    grid-row: 1;
+    display: flex;
+    justify-content:left;
+    align-items:center;
+    margin-bottom: 10px;
+}
+
+#sensorLabel{
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    box-shadow: 0 2px 6px rgba(0,0, 0, 0.25);
+    font-size: 0.95rem;
+}
+
+
+.hero{
+    background:transparent;
+    border-radius: 0;
+    padding: 20px 20px 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    box-shadow: none;
+    grid-column: 1;
+    grid-row: 2 ;
+    height: 100%;
+}
+
+.condition{
+    display: grid;
+    grid-column: 1;
+    grid-row: 2;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 250px;
+}
+
+.condition img{
+    margin-top: 0px;
+    width: 90px;
+}
+.condition p{
+    font-size: large;
+    font-weight: 400;
+    margin-top: 15px;
+}
+
+.highlow-box{
+    background: linear-gradient(to right, #DE6150, #D3B353);
+    border-radius: 16px;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    margin-top: 10px; 
+}
+
+.highlow-box .temp{
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.highlow-box img{
+    width: 28px;
+    opacity: 0.9;
+    margin-bottom: 4px;
+}
+
+.highlow-box .label-high-low{
+    font-size: 14px;
+    letter-spacing: 1px;
+    opacity: 0.9;
+}
+
+.high-item, .low-item{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.temp sup{
+    font-size: 0.5em;
+    margin-left: 2px;
+}
+
+.today-panel{
+    grid-column: 2;
+    grid-row: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.sectionTitle{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 1.1rem;
+}
+
+.title-toggle{
+    cursor: pointer;
+    opacity: 0.6;
+    font-weight: 600;
+}
+
+.title-toggle-active{
+    opacity: 1;
+    text-decoration: underline;
+}
+
+.title-separator{
+    opacity: 0.6;
+}
+
+.today-tabs{
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.today-tab{
+    border: none;
+    border-radius: 999px;
+    padding: 6px 18px;
+    background: rgba(255,255,255,0.7);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.today-tab.active{
+    background: #27a4ff;
+    color: white;
+    transform: translateY(-1px);
+}
+
+
+.today-card{
+    display: grid;
+    grid-template-columns: 2fr 1.3fr;
+    gap: 20px;
+    background: linear-gradient(to bottom, #ccf1c5, #8ddc8f);
+    border-radius: 22px;
+    padding: 24px 26px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    color: #1c3b2b;
+}
+
+
+.today-main{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+.today-status-row{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.today-dot{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.today-dot.live{
+    background: #e53935;
+}
+
+
+.today-main-value{
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-weight: 700;
+}
+
+#today-main-number{
+    font-size: 3.2rem;
+}
+
+#today-main-unit{
+    font-size: 0.9rem;
+}
+
+
+.today-quality{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+}
+
+.quality-chip{
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.quality-good{
+    background: #6fdc6f;
+    color: #155915;
+}
+
+.quality-moderate{
+    background: #ffec99;
+    color: #8a6d00;
+}
+
+.quality-bad{
+    background: #ff9f9f;
+    color: #7b0505;
+}
+
+
+.today-submetrics{
+    display: flex;
+    gap: 36px;
+    margin-top: 4px;
+}
+
+.sub-title{
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.9;
+}
+
+.sub-value{
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.today-scale{
+    display: flex;
+    justify-content: flex-end;  /* να πάει δεξιά */
+    gap: 12px;
+    font-size: 0.7rem;
+    margin-bottom: 6px;
+    opacity: 0.9;
+}
+
+
+
+.today-weather{
+    background: linear-gradient(to top, #DE6150, #D3B353);
+    border-radius: 18px;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    margin-top: 40px;
+}
+
+.today-weather-top{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.today-weather-icon{
+    font-size: 2rem;
+}
+
+.today-weather-main #today-temp{
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.today-weather-main #today-condition{
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.today-weather-grid{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 8px;
+}
+
+
+
+.highlights{
+    background:transparent;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow:none;
+    grid-column: 2;
+    grid-row: 3;
+    display: grid;
+    grid-template-columns: repeat(4,minmax(240px,1fr));
+    gap: 20px;
+    align-items: stretch;
+    
+}
+    
+
+.highlights h2.sectionTitle{
+    margin-bottom: 4px;
+    font-size: 1.3rem;
+    grid-column: 1/-1;
+    margin-top: 90px;
+}
+
+.highlights > div{
+    border-radius: 12px;
+    padding: 15px;
+    color: black;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: center;
+    min-height: 140px;
+    transition: transform.15s ease,box-shadow.15s ease;
+}
+
+.highlights >div h2{
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.value{
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+.minmax{
+    font-size: 12px;
+}
+
+.card-blue {
+    background: linear-gradient(to right,#0d65f3e1,#6dbdf6);
+    color: white;
+}
+
+.card-orange {
+    background:linear-gradient(to right,#f68103de,#f5a55f);
+    color: white;
+}
+
+.card-red {
+    background:linear-gradient(to right,#f80303ca,#f7665c);
+    color: white;
+}
+
+.history{
+    grid-column: 1 / -1;
+    margin-top: 10px;
+    gap: 10px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    display: none;
+    flex-direction: column;
+}
+
+.today-panel.show-history .history{
+    display: flex;
+}
+.history:not(.expanded) .day-card:nth-child(n+6){
+    display: none;
+}
+
+.today-panel.show-history .today-card{
+    display: none;
+}
+
+.today-panel.show-history .today-tabs,
+.today-panel.show-history .today-scale{
+    display: none;          /* κρύβει τα κουμπιά (AQI/Weather/PM2.5) και τη μπάρα Good–Hazardous */
+}
+
+.today-panel:not(.show-history) .history-toggle-btn {
+    display: none !important;
+}
+
+
+.icon-temp img{
+    width: 45px;
+    opacity: 0.9;
+}
+
+.history.is-visible{
+    max-height: 500px;
+    opacity: 1;
+}
+
+.day-card{
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #d0d0d0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    color: #222;
+    padding: 14px 18px;
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr) 220px;
+    column-gap: 16px;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+
+
+.day-left{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+
+.day-header{
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    border-bottom: 1px solid#e2e2e2;
+    padding-bottom: 6px;
+}
+
+.date{
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.day-number{
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+.day-info{
+    display: flex;
+    flex-direction: column;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+}
+
+.weekday{
+    font-weight: 700;
+}
+
+.sun-times{
+    font-size: 0.9rem;
+    font-weight: 600;
+    opacity: 0.9;
+    margin-top: 4px;
+}
+
+
+.day-body{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    margin-top: 4px;
+    text-align: left;
+}
+
+.temp-box{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 10px;      /* λίγο κενό από το icon */
+}
+
+.temp-box .temp-high{
+    color: #e53935;
+    font-size: 1.4rem;      /* πιο μεγάλα γράμματα */
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.temp-box .temp-low{
+    color: #1e88e5;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.metrics-row{
+    display: grid;
+    grid-template-columns: repeat(4, minmax(90px, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.metric-label{
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.8;
+}
+
+.metric-value{
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+
+
+.tag{
+    margin-top: 6px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    align-self: flex-start;
+}
+
+.tag-green{
+    background: #4caf50;
+    color: white;
+}
+
+.tag-orange{
+    background: #ff9800;
+    color: white;
+}
+
+.tag-blue{
+    background: #006eff;
+    color: white;
+}
+
+.history-toggle-btn{
+    margin-top: 8px;
+    align-self: flex-end;
+    padding: 4px 12px;
+    border-radius: 999px;
+    border: none;
+    background: rgba(255,255,255,0.8);
+    font-size: 0.75rem;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.history-toggle-btn:hover{
+    background: #ffffff;
+}
+
+
+
+
+/* Κοντέινερ θερμομτρου */
+.temp-bar-widget{
+  width: 220px;
+  margin: 20px auto 10px;
+  text-align: center;
+}
+
+.temp-bar-labels{
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  opacity: 0.9;
+  margin-bottom: 6px;
+}
+
+.temp-bar{
+  position: relative;
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.2);
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* Γεμιστό gradient (από μπλε σε κόκκινο) */
+.temp-bar-fill{
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, #4facfe, #f5a623, #ff4b2b);
+}
+
+/* Το “δεικτάκι” της θερμοκρασίας */
+.temp-bar-knob{
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 6px rgba(0,0,0,0.4);
+  
+  /* Που βρίσκεται πάνω στη μπάρα – 0% κρύο, 100% καυτό */
+  left: 60%;   /* ~20°C κάπου στη μέση–ζεστό, πείραζε το όπως θες */
+}
+
+/* Η τιμή από κάτω */
+.temp-bar-value{
+  margin-top: 8px;
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.logo{
+    font-size: 2.5rem;
+    margin: 0;
+    line-height: 1.2;
+    padding-left: 60px;
+}
+
+
+.logo-img{
+    height: 160px;      
+    width: auto;
+    object-fit: contain;
+    background: rgba(255, 255, 255, 0.18);  /* ανοιχτό γαλακτερό */
+    border-radius: 999px;
+    backdrop-filter: blur(4px);   
+}
+
+/*@media (max-width: 1100px) {
+  main { grid-template-columns: 1fr; grid-template-rows: auto auto auto; }
+  .hero         { grid-column: 1; grid-row: 1; }
+  .today-timeline { grid-column: 1; grid-row: 2; }
+  .highlights     { grid-column: 1; grid-row: 3; }
+  .highlights { grid-template-columns: repeat(2, minmax(220px, 1fr)); }
+}
+@media (max-width: 640px) {
+  .highlights { grid-template-columns: 1fr; }
+}/

@@ -1,44 +1,39 @@
+// ** CONFIGURATION: Hardcoded Locations with REAL IDs **
+// This ensures markers appear instantly without API errors.
 const sensors = [
     {
-        id: 1,
-        name: "Web2learn-gym- Moundros",
-        city: "Λήμνος - Μούδρος",
+        id: 19225, // REAL ID
+        name: "Web2Learn-gym-Moudros",
+        city: "Moudros",
         country: "Greece",
-        lat: 39.76,
-        lon: 25.28
+        lat: 39.87703, // Coordinates from your JSON
+        lon: 25.27187
     },
     {
-        id: 2,
-        name: "Web2learn-Lyk-Moundros",
-        city: "Λήμνος - Μύρινα",
+        id: 19226, // REAL ID
+        name: "Web2Learn-Lyk-Myrina",
+        city: "Myrina",
         country: "Greece",
-        lat: 39.88,
-        lon: 25.06
-    },
-    {
-        id: 3,
-        name: "Web2learn01",
-        city: "Λήμνος - Πλατύ",
-        country: "Greece",
-        lat: 39.86,
-        lon: 25.17
+        lat: 39.874, // Approximate coords for Myrina (based on your old code)
+        lon: 25.062
     }
 ];
 
-
 document.addEventListener("DOMContentLoaded", () => {
 
-    // Χάρτης → Ελλάδα (λίγο πιο ζουμ)
-    const map = L.map('map').setView([39.0, 23.0], 7.4);
+    // 1. Initialize Map
+    const map = L.map('map').setView([39.0, 23.0], 7.4); // Center on Lemnos
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: "&copy; OpenStreetMap contributors"
     }).addTo(map);
 
     const markersById = {};
+    const dropdown = document.getElementById("sensorSelect");
 
-    // Δημιουργία markers
+    // 2. Create Markers & Dropdown Options
     sensors.forEach(sensor => {
+        // A. Add Marker to Map
         const marker = L.marker([sensor.lat, sensor.lon]).addTo(map);
 
         marker.bindPopup(`
@@ -50,39 +45,41 @@ document.addEventListener("DOMContentLoaded", () => {
         `);
 
         markersById[sensor.id] = marker;
+
+        // B. Add Option to Dropdown
+        if (dropdown) {
+            const opt = document.createElement("option");
+            opt.value = sensor.id;
+            opt.textContent = sensor.name;
+            dropdown.appendChild(opt);
+        }
     });
 
-    // ===== DROPDOWN =====
-    const dropdown = document.getElementById("sensorSelect");
+    // 3. Dropdown Selection Logic
+    if (dropdown) {
+        dropdown.addEventListener("change", () => {
+            const id = Number(dropdown.value);
+            if (!id) return;
 
-    // Γέμισμα dropdown
-    sensors.forEach(s => {
-        const opt = document.createElement("option");
-        opt.value = s.id;
-        opt.textContent = s.name;
-        dropdown.appendChild(opt);
-    });
+            const sensor = sensors.find(s => s.id === id);
+            const marker = markersById[id];
 
-    // Όταν επιλεγεί sensor
-    dropdown.addEventListener("change", () => {
-        const id = Number(dropdown.value);
-        if (!id) return;
-
-        const sensor = sensors.find(s => s.id === id);
-        const marker = markersById[id];
-
-        // Zoom στο σημείο του sensor
-        map.setView([sensor.lat, sensor.lon], 12);
-
-        // Άνοιγμα popup
-        marker.openPopup();
-    });
+            if (sensor && marker) {
+                // Zoom to the sensor
+                map.setView([sensor.lat, sensor.lon], 12);
+                // Open the popup
+                marker.openPopup();
+            }
+        });
+    }
 });
 
+// ** Dashboard Redirect Function **
 function openDashboard(id) {
     const sensor = sensors.find(s => s.id === id);
     if (!sensor) return;
 
+    // This sends the REAL ID (e.g., 19225) to the next page
     const url =
         `Web2Learn.html` +
         `?id=${sensor.id}` +
@@ -94,4 +91,3 @@ function openDashboard(id) {
 
     window.location.href = url;
 }
-

@@ -1,6 +1,111 @@
-document.addEventListener("DOMContentLoaded", () => {
+// ** CONFIGURATION **
+const API_URL = "https://api.smartcitizen.me/v0/devices/";
 
-    /* -------------------- HIGHLIGHTS COLORS -------------------- */
+// SENSOR ID MAPPING 
+const SENSOR_MAPPING = {
+    TEMP_ID: 55,       // Sensirion SHT31 - Temperature
+    HUMIDITY_ID: 56,   // Sensirion SHT31 - Humidity
+    PM25_ID: 194,      // Sensirion SEN5X - PM2.5
+    NOISE_ID: 53,      // TDK ICS43432 - Noise Level
+    PRESSURE_ID: 58,   // NXP MPL3115A2 - Barometric Pressure
+    UV_ID: 214         // AMS AS7731 - UVA
+};
+
+// ** 1. FETCH LIVE DATA **
+const getSensorData = async (deviceId) => {
+    try {
+        const response = await fetch(API_URL + deviceId);
+        if (!response.ok) throw new Error(`Response Error: ${response.status}`);
+        const device = await response.json();
+        
+        const targetIds = Object.values(SENSOR_MAPPING);
+        const selected = device.data.sensors
+            .filter(sensor => targetIds.includes(sensor.id))
+            .map(sensor => ({
+                id: sensor.id,
+                name: sensor.name, 
+                value: sensor.value ?? null,
+                unit: sensor.unit,
+                timestamp: sensor.last_reading_at
+            }));
+
+        const locationInfo = {
+            name: device.name,
+            city: device.location?.city || "Unknown City",
+            country: device.location?.country || "Greece",
+            id: device.id,
+            latitude: device.location?.latitude,
+            longitude: device.location?.longitude
+        };
+
+        return { sensors: selected, info: locationInfo };
+
+    } catch (error) {
+        console.error("Live Data Error:", error.message);
+        return { sensors: [], info: null };
+    }
+};
+
+// ** 2. FETCH HISTORICAL DATA (Matches your URL exactly) **
+const getHistoricalReadings = async (deviceId, sensorId, from, to, rollup = "4h") => {
+    // URL Structure: .../readings?sensor_id=55&rollup=4h&from=2025-11-25&to=2025-11-30
+    const historyUrl = `${API_URL}${deviceId}/readings?sensor_id=${sensorId}&rollup=${rollup}&from=${from}&to=${to}`;
+    console.log("Fetching History:", historyUrl); 
+
+    try {
+        const response = await fetch(historyUrl);
+        if (!response.ok) throw new Error(`Historical Error: ${response.status}`);
+        const data = await response.json();
+        return data.readings;
+    } catch (error) {
+        console.error("History Fetch Failed:", error.message);
+        return [];
+    }
+};
+
+// ** 3. UPDATE HIGH / LOW WIDGET **
+async function updateHighLow(deviceId, referenceDateStr) {
+    // 1. Determine the Date Range
+    // If we have a last reading date (e.g. 2025-11-29), use that. Otherwise use today.
+    const refDate = referenceDateStr ? new Date(referenceDateStr) : new Date();
+    
+    // Create "from" date (start of that day)
+    const fromDate = new Date(refDate);
+    // Format to YYYY-MM-DD
+    const fromStr = fromDate.toISOString().split('T')[0];
+    
+    // Create "to" date (the next day, to ensure we get the full 24h of the "from" day)
+    const toDate = new Date(refDate);
+    toDate.setDate(toDate.getDate() + 1);
+    const toStr = toDate.toISOString().split('T')[0];
+
+    // 2. Fetch History using your specific settings (Rollup 4h)
+    const readings = await getHistoricalReadings(deviceId, SENSOR_MAPPING.TEMP_ID, fromStr, toStr, "4h");
+
+    if (!readings || readings.length === 0) {
+        console.warn("No historical data found.");
+        document.querySelector(".high-item .temp").innerHTML = "--";
+        document.querySelector(".low-item .temp").innerHTML = "--";
+        return;
+    }
+
+    // 3. Process Data
+    const values = readings.map(r => r[1]).filter(v => v !== null);
+
+    if (values.length > 0) {
+        const maxTemp = Math.max(...values);
+        const minTemp = Math.min(...values);
+
+        const highEl = document.querySelector(".high-item .temp");
+        const lowEl = document.querySelector(".low-item .temp");
+
+        if (highEl) highEl.innerHTML = `${Math.round(maxTemp)}<sup>°C</sup>`;
+        if (lowEl) lowEl.innerHTML = `${Math.round(minTemp)}<sup>°C</sup>`;
+    }
+}
+
+// ** 4. UPDATE HIGHLIGHT CARDS **
+function updateHighlights(sensorData) {
     const cards = document.querySelectorAll(".highlights .card");
 
     cards.forEach(card => {
@@ -8,230 +113,199 @@ document.addEventListener("DOMContentLoaded", () => {
         const valueElement = card.querySelector(".value");
         if (!type || !valueElement) return;
 
-        const rawValue = valueElement.dataset.value;
-        if (!rawValue) return;
+        let sensorId;
+        switch(type) {
+            case "temp": sensorId = SENSOR_MAPPING.TEMP_ID; break;
+            case "humidity": sensorId = SENSOR_MAPPING.HUMIDITY_ID; break;
+            case "pm25": sensorId = SENSOR_MAPPING.PM25_ID; break;
+            case "noise-level": sensorId = SENSOR_MAPPING.NOISE_ID; break;
+            default: return;
+        }
 
-        const value = parseFloat(rawValue);
-        if (isNaN(value)) return;
+        const sensor = sensorData.find(s => s.id === sensorId);
+        if (!sensor || sensor.value === null) {
+            valueElement.textContent = "--";
+            return;
+        }
+
+        const value = parseFloat(sensor.value);
+        const displayValue = (type === 'pm25' || type === 'noise-level') 
+            ? Math.round(value) 
+            : value.toFixed(1);
+
+        valueElement.textContent = displayValue + (sensor.unit || "");
+        valueElement.dataset.value = value;
 
         card.classList.remove("card-blue", "card-orange", "card-red");
-
         switch(type){
             case "temp":
                 if (value <= 10) card.classList.add("card-blue");
                 else if (value < 25) card.classList.add("card-orange");
                 else card.classList.add("card-red");
                 break;
-
             case "humidity":
                 if (value < 30) card.classList.add("card-blue");
                 else if (value <= 60) card.classList.add("card-orange");
                 else card.classList.add("card-red");
                 break;
-
-            case "pressure":
-                if (value < 1000) card.classList.add("card-blue");
-                else if (value <= 1020) card.classList.add("card-orange");
+            case "pm25": 
+                if (value <= 12) card.classList.add("card-blue");
+                else if (value <= 35) card.classList.add("card-orange");
                 else card.classList.add("card-red");
                 break;
-
-            case "uv":
-                if (value < 3) card.classList.add("card-blue");
-                else if (value <= 6) card.classList.add("card-orange");
+            case "noise-level": 
+                if (value < 40) card.classList.add("card-blue");
+                else if (value <= 70) card.classList.add("card-orange");
                 else card.classList.add("card-red");
                 break;
         }
     });
+}
 
+// ** 5. UPDATE MAIN METRIC PANEL **
+function applyMetric(metricKey, sensorData) {
+    let selectedSensor;
+    let qualityText = "N/A";
+    let qualityClass = "moderate"; 
 
-    /* -------------------- WEATHER ICON SWITCH -------------------- */
-    const condition = document.querySelector(".condition");
-
-    if (condition){
-        const weather = condition.dataset.weather;
-        const imgEl = condition.querySelector("img");
-
-        if (weather && imgEl){
-            const weatherIcons = {
-                rain: "weather images/rain_cloud.png",
-                storm:"weather images/thunder_cloud_and_rain.png",
-                snow: "weather images/snowflake.png",
-                mist: "weather images/fog.png",
-                clear:"weather images/sunny.png"
-            };
-
-            imgEl.src = weatherIcons[weather] || imgEl.src;
-        }
-    }
-
-
-    /* -------------------- TODAY / HISTORY SWITCH -------------------- */
-    const todayBox = document.querySelector(".today-panel");
-    const titleToggles = todayBox.querySelectorAll(".title-toggle");
-
-    titleToggles.forEach(toggle => {
-        toggle.addEventListener("click", () => {
-
-            // ενεργό styling
-            titleToggles.forEach(t => t.classList.remove("title-toggle-active"));
-            toggle.classList.add("title-toggle-active");
-
-            const view = toggle.dataset.view;
-            if (view === "history") {
-                todayBox.classList.add("show-history");
-            } else {
-                todayBox.classList.remove("show-history");
+    switch(metricKey) {
+        case "temperature": 
+            selectedSensor = sensorData.find(s => s.id === SENSOR_MAPPING.TEMP_ID);
+            if (selectedSensor) {
+                const val = parseFloat(selectedSensor.value);
+                if (val <= 10) { qualityText = "Cold"; qualityClass = "blue"; } 
+                else if (val < 25) { qualityText = "Normal"; qualityClass = "good"; }
+                else { qualityText = "Hot"; qualityClass = "bad"; }
             }
-        });
-    });
+            break;
 
+        case "aqi": 
+            selectedSensor = sensorData.find(s => s.id === SENSOR_MAPPING.HUMIDITY_ID);
+            if (selectedSensor) {
+                const val = parseFloat(selectedSensor.value);
+                if (val < 30) { qualityText = "Dry"; qualityClass = "moderate"; }
+                else if (val <= 60) { qualityText = "Ideal"; qualityClass = "good"; }
+                else { qualityText = "Humid"; qualityClass = "bad"; }
+            }
+            break;
 
-    /* -------------------- SENSOR LABEL -------------------- */
-    const params = new URLSearchParams(window.location.search);
+        case "pm25": 
+            selectedSensor = sensorData.find(s => s.id === SENSOR_MAPPING.PM25_ID);
+            if (selectedSensor) {
+                const val = parseFloat(selectedSensor.value);
+                if (val <= 12) { qualityText = "Good"; qualityClass = "good"; }
+                else if (val <= 35.4) { qualityText = "Moderate"; qualityClass = "moderate"; }
+                else { qualityText = "Unhealthy"; qualityClass = "bad"; }
+            }
+            break;
 
-    const id = params.get("id");
-    const name = params.get("name");
-    const city = params.get("city");
-    const country = params.get("country");
-    const lat = params.get("lat");
-    const lon = params.get("lon");
-
-    const labelEl = document.getElementById("sensorLabel");
-
-    if (labelEl) {
-        const parts = [];
-
-        if (city) parts.push(city);
-        if (country) parts.push(country);
-        if (name) parts.push(name);
-        if (id) parts.push(`ID ${id}`);
-        
-        // Αν θέλεις να φαίνεται και η τοποθεσία:
-        if (lat && lon) parts.push(`(${lat}, ${lon})`);
-
-        labelEl.textContent = parts.length
-            ? parts.join(" - ")
-            : "No sensor selected";
+        case "noise-level": 
+            selectedSensor = sensorData.find(s => s.id === SENSOR_MAPPING.NOISE_ID);
+            if (selectedSensor) {
+                const val = parseFloat(selectedSensor.value);
+                if (val < 40) { qualityText = "Quiet"; qualityClass = "good"; }
+                else if (val <= 70) { qualityText = "Normal"; qualityClass = "moderate"; }
+                else { qualityText = "Loud"; qualityClass = "bad"; }
+            }
+            break;
+            
+        default: return;
     }
 
+    if (selectedSensor) {
+        document.getElementById("today-status-label").textContent = selectedSensor.name;
+        
+        const displayVal = (metricKey === 'pm25' || metricKey === 'noise-level') 
+            ? Math.round(selectedSensor.value) 
+            : parseFloat(selectedSensor.value).toFixed(1);
 
-
-    /* ---------------------------------------------------------
-       TODAY METRICS: ΚΟΥΜΠΙΑ → Temperature, Humidity, PM2.5, Noise
-    --------------------------------------------------------- */
-
-    const metricsData = {
-        temperature: {
-            statusLabel: "Temperature",
-            mainNumber: 22,
-            mainUnit: "°C",
-            qualityText: "Normal",
-            quality: "moderate",
-            pm25: "-",
-            temp: "22°C",
-            condition: "Clear",
-            humidity: "25%",
-            wind: "5 km/h",
-            uv: "1"
-        },
-
-        aqi: {
-            statusLabel: "Humidity",
-            mainNumber: 100,
-            mainUnit: "%",
-            qualityText: "Very Humid",
-            quality: "bad",
-            pm25: "8 µg/m³",
-            temp: "10°C",
-            condition: "Light rain",
-            humidity: "100%",
-            wind: "6 km/h",
-            uv: "0"
-        },
-
-        pm25: {
-            statusLabel: "PM2.5",
-            mainNumber: 8,
-            mainUnit: "µg/m³",
-            qualityText: "Low",
-            quality: "good",
-            pm25: "8 µg/m³",
-            temp: "10°C",
-            condition: "Cloudy",
-            humidity: "90%",
-            wind: "4 km/h",
-            uv: "0"
-        },
-
-        "noise-level": {
-            statusLabel: "Noise Level",
-            mainNumber: 6,
-            mainUnit: "dB",
-            qualityText: "Normal",
-            quality: "moderate",
-            pm25: "-",
-            temp: "10°C",
-            condition: "Cloudy",
-            humidity: "80%",
-            wind: "5 km/h",
-            uv: "0"
-        }
-    };
-
-
-    /* -------------------- APPLY METRIC -------------------- */
-    function applyMetric(metricKey){
-        const data = metricsData[metricKey];
-        if (!data) return;
-
-        document.getElementById("today-status-label").textContent = data.statusLabel;
-        document.getElementById("today-main-number").textContent  = data.mainNumber;
-        document.getElementById("today-main-unit").textContent    = data.mainUnit;
+        document.getElementById("today-main-number").textContent = displayVal;
+        document.getElementById("today-main-unit").textContent = selectedSensor.unit;
 
         const qLabel = document.getElementById("today-quality-label");
-        qLabel.textContent = data.qualityText;
-        qLabel.classList.remove("quality-good","quality-moderate","quality-bad");
-        qLabel.classList.add("quality-" + data.quality);
+        qLabel.textContent = qualityText;
+        qLabel.classList.remove("quality-good","quality-moderate","quality-bad", "quality-blue");
+        
+        if(qualityClass === 'blue') qLabel.classList.add("quality-good"); 
+        else qLabel.classList.add("quality-" + qualityClass);
+    }
+}
 
-        document.getElementById("today-pm25").textContent = data.pm25;
+// ** 6. UPDATE AUXILIARY DATA **
+function applyRealtimeData(sensorData) {
+    const temp = sensorData.find(s => s.id === SENSOR_MAPPING.TEMP_ID);
+    const hum = sensorData.find(s => s.id === SENSOR_MAPPING.HUMIDITY_ID);
+    const pm25 = sensorData.find(s => s.id === SENSOR_MAPPING.PM25_ID);
+    const noise = sensorData.find(s => s.id === SENSOR_MAPPING.NOISE_ID);
 
-        document.getElementById("today-temp").textContent      = data.temp;
-        document.getElementById("today-condition").textContent = data.condition;
-        document.getElementById("today-humidity").textContent  = data.humidity;
-        document.getElementById("today-wind").textContent      = data.wind;
-        document.getElementById("today-uv").textContent        = data.uv;
+    if (temp) document.getElementById("today-temp").textContent = Math.round(temp.value) + "°C";
+    if (hum) document.getElementById("today-humidity").textContent = Math.round(hum.value) + "%";
+    if (pm25) {
+        const pmEl = document.getElementById("today-pm25"); 
+        if(pmEl) pmEl.textContent = Math.round(pm25.value) + " µg/m³";
+    }
+    if (noise) {
+         const uvEl = document.getElementById("today-uv"); 
+         if(uvEl) uvEl.textContent = Math.round(noise.value) + " dB";
+    }
+}
+
+// ** MAIN RUNNER **
+async function updateDashboard() {
+    const params = new URLSearchParams(window.location.search);
+    const deviceId = params.get("id") || "19225"; 
+
+    // --- 1. Fetch Live Data ---
+    const result = await getSensorData(deviceId);
+    
+    const labelEl = document.getElementById("sensorLabel");
+    if (labelEl) {
+        if(result.info && result.info.name) {
+            labelEl.textContent = `${result.info.city} - ${result.info.name}`;
+        } else {
+            labelEl.textContent = "Loading...";
+        }
     }
 
+    const sensorData = result.sensors;
 
-    /* -------------------- TAB CLICK HANDLER -------------------- */
-    const tabs = document.querySelectorAll(".today-tab");
+    if (sensorData.length > 0) {
+        updateHighlights(sensorData);
+        applyRealtimeData(sensorData);
 
-    tabs.forEach(tab => {
-        tab.addEventListener("click", () => {
+        // Get Timestamp of last reading to ensure High/Low works even if sensor is offline
+        const tempSensor = sensorData.find(s => s.id === SENSOR_MAPPING.TEMP_ID);
+        const lastReading = tempSensor ? tempSensor.timestamp : null;
 
-            tabs.forEach(t => t.classList.remove("active"));
-            tab.classList.add("active");
+        // Initialize Tabs
+        const tabs = document.querySelectorAll(".today-tab");
+        tabs.forEach(tab => {
+            const newTab = tab.cloneNode(true);
+            tab.parentNode.replaceChild(newTab, tab);
 
-            const metric = tab.dataset.metric;
-            applyMetric(metric);
+            newTab.addEventListener("click", () => {
+                document.querySelectorAll(".today-tab").forEach(t => t.classList.remove("active"));
+                newTab.classList.add("active");
+                applyMetric(newTab.dataset.metric, sensorData);
+            });
         });
-    });
 
-        // ------------- Expand / Collapse ιστορικού -------------
-    const historyEl = document.querySelector(".history");
-    const historyBtn = document.getElementById("historyToggleBtn");
+        // Trigger Default Tab
+        const defaultTab = document.querySelector('.today-tab.active') || document.querySelector('.today-tab');
+        if (defaultTab) {
+            applyMetric(defaultTab.dataset.metric, sensorData);
+        }
 
-    if (historyEl && historyBtn){
-        historyBtn.addEventListener("click", () => {
-            const expanded = historyEl.classList.toggle("expanded");
-            historyBtn.textContent = expanded
-                ? "Show fewer days"
-                : "Show full month";
-        });
+        // --- 2. Update High/Low using Last Reading Date ---
+        await updateHighLow(deviceId, lastReading);
+
+    } else {
+        console.warn("No live sensor data found.");
+        if(labelEl) labelEl.textContent = "Sensor Offline or No Data";
     }
+}
 
-
-
-    /* -------------------- DEFAULT LOAD -------------------- */
-    applyMetric("aqi"); // default Humidity
+// ** START **
+document.addEventListener("DOMContentLoaded", () => {
+    updateDashboard();
 });

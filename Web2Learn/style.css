@@ -674,14 +674,3 @@ main{
     border-radius: 999px;
     backdrop-filter: blur(4px);   
 }
-
-/*@media (max-width: 1100px) {
-  main { grid-template-columns: 1fr; grid-template-rows: auto auto auto; }
-  .hero         { grid-column: 1; grid-row: 1; }
-  .today-timeline { grid-column: 1; grid-row: 2; }
-  .highlights     { grid-column: 1; grid-row: 3; }
-  .highlights { grid-template-columns: repeat(2, minmax(220px, 1fr)); }
-}
-@media (max-width: 640px) {
-  .highlights { grid-template-columns: 1fr; }
-}/

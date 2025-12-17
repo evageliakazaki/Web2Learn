@@ -7,9 +7,6 @@ const SENSOR_MAPPING = {
     HUMIDITY_ID: 56,   // Humidity
     PM25_ID: 194,      // PM2.5
     NOISE_ID: 53,      // Noise
-    PRESSURE_ID: 58,   // Pressure
-    UV_ID: 214,        // UVA
-    LIGHT_ID: 14       // Light
 };
 
 // ** 1. FETCH LIVE DATA **
@@ -18,8 +15,9 @@ const getSensorData = async (deviceId) => {
         const response = await fetch(API_URL + deviceId);
         if (!response.ok) throw new Error(`Response Error: ${response.status}`);
         const device = await response.json();
-        
+
         const targetIds = Object.values(SENSOR_MAPPING);
+        
         const selected = device.data.sensors
             .filter(sensor => targetIds.includes(sensor.id))
             .map(sensor => ({

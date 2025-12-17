@@ -16,6 +16,14 @@ const sensors = [
         country: "Greece",
         lat: 39.874, // Approximate coords for Myrina (based on your old code)
         lon: 25.062
+    },
+    {
+        id: 19232, // REAL ID
+        name: "Web2Learn-gym-Livad",
+        city: "Myrina",
+        country: "Greece",
+        lat: 39.913, // Approximate coords for Livad (based on your old code)
+        lon: 25.200
     }
 ];
 

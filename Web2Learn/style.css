@@ -312,6 +312,11 @@ main{
     margin-top: 40px;
 }
 
+.today-panel.show-history .today-weather{
+    display: none;
+}
+
+
 .today-weather-top{
     display: flex;
     align-items: center;

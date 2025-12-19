@@ -391,18 +391,55 @@ main{
     font-size: 12px;
 }
 
-.card-blue {
-    background: linear-gradient(to right,#0d65f3e1,#6dbdf6);
-    color: white;
+.card-green {
+    background: linear-gradient(to right, #22c55e, #86efac);
+    color: #064e3b;
+}
+
+.card-light-green {
+    background: linear-gradient(to right, #86efac, #bbf7d0);
+    color: #065f46;
+}
+
+.card-yellow {
+    background: linear-gradient(to right, #facc15, #fde047);
+    color: #78350f;
 }
 
 .card-orange {
-    background:linear-gradient(to right,#f68103de,#f5a55f);
-    color: white;
+    background: linear-gradient(to right, #fb923c, #fdba74);
+    color: #7c2d12;
 }
 
 .card-red {
-    background:linear-gradient(to right,#f80303ca,#f7665c);
+    background: linear-gradient(to right, #ef4444, #f87171);
+    color: #7f1d1d;
+}
+
+/* === Temperature Cards === */
+
+.card-cold {
+    background: linear-gradient(to right, #3B82F6, #60A5FA);
+    color: white;
+}
+
+.card-cool {
+    background: linear-gradient(to right, #60A5FA, #93C5FD);
+    color: white;
+}
+
+.card-comfortable {
+    background: linear-gradient(to right, #FACC15, #FDE047);
+    color: #1f2937; /* dark text for contrast */
+}
+
+.card-warm {
+    background: linear-gradient(to right, #FB923C, #FDBA74);
+    color: white;
+}
+
+.card-hot {
+    background: linear-gradient(to right, #EF4444, #F87171);
     color: white;
 }
 

@@ -271,7 +271,7 @@ function updateHighlights(sensorData) {
         if (!type || !valueElement) return;
 
         let sensorId;
-        switch(type) {
+        switch (type) {
             case "temp": sensorId = SENSOR_MAPPING.TEMP_ID; break;
             case "humidity": sensorId = SENSOR_MAPPING.HUMIDITY_ID; break;
             case "pm25": sensorId = SENSOR_MAPPING.PM25_ID; break;
@@ -286,33 +286,61 @@ function updateHighlights(sensorData) {
         }
 
         const value = parseFloat(sensor.value);
-        const displayValue = (type === 'pm25' || type === 'noise-level') 
-            ? Math.round(value) 
-            : value.toFixed(1);
+        const displayValue =
+            (type === "pm25" || type === "noise-level")
+                ? Math.round(value)
+                : value.toFixed(1);
 
         valueElement.textContent = displayValue + (sensor.unit || "");
-        valueElement.dataset.value = value;
 
-        card.classList.remove("card-blue", "card-orange", "card-red");
-        switch(type){
+        // 🔥 Remove ALL possible color classes first
+        card.classList.remove(
+            "card-cold","card-cool","card-comfortable","card-warm","card-hot",
+            "card-green","card-light-green","card-yellow","card-orange","card-red"
+        );
+
+        // 🎯 Apply correct color logic
+        switch (type) {
+
             case "temp":
-                if (value <= 10) card.classList.add("card-blue");
-                else if (value < 25) card.classList.add("card-orange");
-                else card.classList.add("card-red");
+                if (value <= 10) card.classList.add("card-cold");
+                else if (value <= 18) card.classList.add("card-cool");
+                else if (value <= 26) card.classList.add("card-comfortable");
+                else if (value <= 32) card.classList.add("card-warm");
+                else card.classList.add("card-hot");
                 break;
+
             case "humidity":
-                if (value < 30) card.classList.add("card-blue");
-                else if (value <= 60) card.classList.add("card-orange");
+                if (value >= 40 && value <= 60) card.classList.add("card-green");
+                else if (
+                    (value >= 30 && value < 40) ||
+                    (value > 60 && value <= 70)
+                ) card.classList.add("card-light-green");
+                else if (
+                    (value >= 20 && value < 30) ||
+                    (value > 70 && value <= 80)
+                ) card.classList.add("card-yellow");
+                else if (
+                    (value >= 10 && value < 20) ||
+                    (value > 80 && value <= 90)
+                ) card.classList.add("card-orange");
                 else card.classList.add("card-red");
                 break;
-            case "pm25": 
-                if (value <= 12) card.classList.add("card-blue");
-                else if (value <= 35) card.classList.add("card-orange");
+
+
+           case "pm25":
+                if (value <= 5) card.classList.add("card-green");
+                else if (value <= 15) card.classList.add("card-light-green");
+                else if (value <= 25) card.classList.add("card-yellow");
+                else if (value <= 50) card.classList.add("card-orange");
                 else card.classList.add("card-red");
                 break;
-            case "noise-level": 
-                if (value < 40) card.classList.add("card-blue");
-                else if (value <= 70) card.classList.add("card-orange");
+
+            case "noise-level":
+                if (value < 40) card.classList.add("card-green");
+                else if (value <= 55) card.classList.add("card-light-green");
+                else if (value <= 65) card.classList.add("card-yellow");
+                else if (value <= 75) card.classList.add("card-orange");
                 else card.classList.add("card-red");
                 break;
         }

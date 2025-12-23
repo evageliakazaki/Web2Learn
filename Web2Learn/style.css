@@ -25,7 +25,6 @@ header {
     padding-right: 160px;
 }
 
-
 main {
     display: grid;
     grid-template-columns: 1.1fr 2fr;
@@ -34,11 +33,8 @@ main {
     row-gap: 0;
     align-items: start;
     padding: 0 20px 20px;
-
     min-height: calc(100vh - 80px);
 }
-
-
 
 .selected-sensor {
     grid-column: 1/-1;
@@ -57,7 +53,6 @@ main {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
     font-size: 0.95rem;
 }
-
 
 .hero {
     background: transparent;
@@ -78,23 +73,17 @@ main {
     top: 50%;
     right: 25px;
     transform: translateY(-50%);
-
-    /* Styling */
     display: flex;
     align-items: center;
     gap: 8px;
     padding: 8px 16px;
     background: rgba(255, 255, 255, 0.2);
-    /* Semi-transparent */
     backdrop-filter: blur(5px);
-    /* Glass effect */
     color: white;
-    /* White text */
     text-decoration: none;
     font-size: 0.95rem;
     font-weight: bold;
     border-radius: 50px;
-    /* Rounded pill shape */
     border: 1px solid rgba(255, 255, 255, 0.3);
     transition: all 0.3s ease;
 }
@@ -104,20 +93,16 @@ main {
     transition: transform 0.3s ease;
 }
 
-/* Hover Effects */
 .btn-back-map:hover {
     background: rgba(255, 255, 255, 0.9);
     color: #333;
-    /* Darkens text on hover */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .btn-back-map:hover span {
     transform: translateX(-4px);
-    /* Arrow nudges left on hover */
 }
 
-/* Responsive: Adjust for mobile phones */
 @media (max-width: 600px) {
     .btn-back-map {
         padding: 6px 12px;
@@ -201,8 +186,8 @@ main {
 }
 
 .sectionTitle {
-    display: flex;
-    align-items: center;
+    align-items: right;
+    text-align: right;
     gap: 4px;
     font-size: 1.1rem;
 }
@@ -245,26 +230,105 @@ main {
     transform: translateY(-1px);
 }
 
-
+/* === TODAY CARD – PREMIUM LOOK === */
 .today-card {
+    position: relative;
     display: grid;
-    grid-template-columns: 2fr 1.3fr;
-    gap: 20px;
-    background: linear-gradient(to bottom, #ccf1c5, #8ddc8f);
-    border-radius: 22px;
-    padding: 24px 26px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+    grid-template-columns: 1fr;
+    gap: 18px;
+
+    padding: 28px 30px;
+    border-radius: 26px;
+
+    background: linear-gradient(135deg,
+            rgba(200, 245, 200, 0.95),
+            rgba(140, 220, 160, 0.95));
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+
     color: #1c3b2b;
+    overflow: hidden;
 }
 
+.today-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top left,
+            rgba(255, 255, 255, 0.35),
+            transparent 60%);
+    pointer-events: none;
+}
 
+/* === MAIN CONTENT === */
 .today-main {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
+    z-index: 1;
 }
 
+/* === TODAY HISTORY (Last 5 Days) -> 5 τετραγωνάκια μέσα στο πράσινο === */
+.today-history h4 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    letter-spacing: 0.2px;
+}
 
+.today-temperature-list {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    /* χώρισε σε 5 */
+    gap: 12px;
+    align-items: stretch;
+}
+
+.today-history-item {
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(28, 59, 43, 0.12);
+    border-radius: 14px;
+    padding: 12px 10px;
+    box-shadow:
+        0 8px 16px rgba(0, 0, 0, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.55);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    min-height: 84px;
+}
+
+.today-history-item .day {
+    font-size: 0.85rem;
+    font-weight: 700;
+    opacity: 0.85;
+}
+
+.today-history-item .temp {
+    font-size: 1.35rem;
+    font-weight: 900;
+}
+
+/* responsive για μικρές οθόνες */
+@media (max-width: 980px) {
+    .today-history-list {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 560px) {
+    .today-history-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* (κρατάω τα υπόλοιπα όπως τα είχες) */
 .today-status-row {
     display: flex;
     align-items: center;
@@ -283,7 +347,6 @@ main {
     background: #e53935;
 }
 
-
 .today-main-value {
     display: flex;
     align-items: baseline;
@@ -298,7 +361,6 @@ main {
 #today-main-unit {
     font-size: 0.9rem;
 }
-
 
 .today-quality {
     display: flex;
@@ -329,7 +391,6 @@ main {
     color: #7b0505;
 }
 
-
 .today-submetrics {
     display: flex;
     gap: 36px;
@@ -351,7 +412,6 @@ main {
 .today-scale {
     display: flex;
     justify-content: flex-end;
-    /* να πάει δεξιά */
     gap: 12px;
     font-size: 0.7rem;
     margin-bottom: 6px;
@@ -369,9 +429,7 @@ main {
     grid-template-columns: repeat(4, minmax(240px, 1fr));
     gap: 20px;
     align-items: stretch;
-
 }
-
 
 .highlights h2.sectionTitle {
     margin-bottom: 4px;
@@ -390,7 +448,7 @@ main {
     gap: 8px;
     justify-content: center;
     min-height: 140px;
-    transition: transform.15s ease, box-shadow.15s ease;
+    transition: transform .15s ease, box-shadow .15s ease;
 }
 
 .highlights>div h2 {
@@ -435,7 +493,6 @@ main {
 }
 
 /* === Temperature Cards === */
-
 .card-cold {
     background: linear-gradient(to right, #3B82F6, #60A5FA);
     color: white;
@@ -449,7 +506,6 @@ main {
 .card-comfortable {
     background: linear-gradient(to right, #FACC15, #FDE047);
     color: #1f2937;
-    /* dark text for contrast */
 }
 
 .card-warm {
@@ -487,13 +543,11 @@ main {
 .today-panel.show-history .today-tabs,
 .today-panel.show-history .today-scale {
     display: none;
-    /* κρύβει τα κουμπιά (AQI/Weather/PM2.5) και τη μπάρα Good–Hazardous */
 }
 
 .today-panel:not(.show-history) .history-toggle-btn {
     display: none !important;
 }
-
 
 .icon-temp img {
     width: 45px;
@@ -519,20 +573,17 @@ main {
     font-size: 0.85rem;
 }
 
-
-
 .day-left {
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
-
 .day-header {
     display: flex;
     align-items: baseline;
     gap: 6px;
-    border-bottom: 1px solid#e2e2e2;
+    border-bottom: 1px solid #e2e2e2;
     padding-bottom: 6px;
 }
 
@@ -566,7 +617,6 @@ main {
     margin-top: 4px;
 }
 
-
 .day-body {
     display: flex;
     align-items: center;
@@ -581,13 +631,11 @@ main {
     flex-direction: column;
     justify-content: center;
     margin-left: 10px;
-    /* λίγο κενό από το icon */
 }
 
 .temp-box .temp-high {
     color: #e53935;
     font-size: 1.4rem;
-    /* πιο μεγάλα γράμματα */
     font-weight: 700;
     line-height: 1.1;
 }
@@ -617,8 +665,6 @@ main {
     font-weight: 700;
     font-size: 0.95rem;
 }
-
-
 
 .tag {
     margin-top: 6px;
@@ -661,10 +707,7 @@ main {
     background: #ffffff;
 }
 
-
-
-
-/* Κοντέινερ θερμομτρου */
+/* Κοντέινερ θερμομέτρου */
 .temp-bar-widget {
     width: 220px;
     margin: 20px auto 10px;
@@ -688,14 +731,12 @@ main {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-/* Γεμιστό gradient (από μπλε σε κόκκινο) */
 .temp-bar-fill {
     position: absolute;
     inset: 0;
     background: linear-gradient(to right, #4facfe, #f5a623, #ff4b2b);
 }
 
-/* Το “δεικτάκι” της θερμοκρασίας */
 .temp-bar-knob {
     position: absolute;
     top: 50%;
@@ -705,13 +746,9 @@ main {
     border-radius: 50%;
     background: #ffffff;
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
-
-    /* Που βρίσκεται πάνω στη μπάρα – 0% κρύο, 100% καυτό */
     left: 60%;
-    /* ~20°C κάπου στη μέση–ζεστό, πείραζε το όπως θες */
 }
 
-/* Η τιμή από κάτω */
 .temp-bar-value {
     margin-top: 8px;
     font-size: 26px;
@@ -720,19 +757,14 @@ main {
 }
 
 .logo {
-    font-size: 2.5rem;
+    font-size: 2.3rem;
     margin: 0;
     line-height: 1.2;
     padding-left: 60px;
 }
 
-
 .logo-img {
-    height: 160px;
+    height: 150px;
     width: auto;
     object-fit: contain;
-    background: rgba(255, 255, 255, 0.18);
-    /* ανοιχτό γαλακτερό */
-    border-radius: 999px;
-    backdrop-filter: blur(4px);
 }

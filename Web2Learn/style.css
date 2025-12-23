@@ -21,6 +21,8 @@ header {
     justify-content: flex-start;
     gap: 12px;
     padding: 18px 28px;
+    position: relative;
+    padding-right: 160px;
 }
 
 
@@ -69,6 +71,59 @@ main {
     grid-column: 1;
     grid-row: 2;
     height: 100%;
+}
+
+.btn-back-map {
+    position: absolute;
+    top: 50%;
+    right: 25px;
+    transform: translateY(-50%);
+
+    /* Styling */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.2);
+    /* Semi-transparent */
+    backdrop-filter: blur(5px);
+    /* Glass effect */
+    color: white;
+    /* White text */
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: bold;
+    border-radius: 50px;
+    /* Rounded pill shape */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-back-map span {
+    font-size: 1.1rem;
+    transition: transform 0.3s ease;
+}
+
+/* Hover Effects */
+.btn-back-map:hover {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    /* Darkens text on hover */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-back-map:hover span {
+    transform: translateX(-4px);
+    /* Arrow nudges left on hover */
+}
+
+/* Responsive: Adjust for mobile phones */
+@media (max-width: 600px) {
+    .btn-back-map {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+        right: 10px;
+    }
 }
 
 .condition {

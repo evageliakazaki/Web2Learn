@@ -12,7 +12,7 @@
 
 <body>
     <header>
-        <img class="logo-img" src="airlimnos_logo_transparent.png" alt="AirLimnos logo">
+        <img class="logo-img" src="airlimnos-white.png" alt="AirLimnos logo">
         <h1 class="logo">AIR QUALITY DASHBOARD</h1>
         <a href="map.html" class="btn-back-map">
             <span>&#8592;</span> Back to Map
@@ -68,37 +68,12 @@
             </h2>
 
 
-            <div class="today-tabs">
-                <button class="today-tab active" data-metric="temperature">Temperature</button>
-                <button class="today-tab" data-metric="aqi">Humidity</button>
-                <button class="today-tab" data-metric="pm25">PM2.5</button>
-                <button class="today-tab" data-metric="noise-level">Noise-Level</button>
-            </div>
-
-
 
             <div class="today-card">
                 <div class="today-main">
-                    <div class="today-status-row">
-                        <span class="today-dot live"></span>
-                        <span class="today-status-label" id="today-status-label">Live AQI</span>
-                    </div>
-
-                    <div class="today-main-value">
-                        <span id="today-main-number">38</span>
-                        <span id="today-main-unit">(AQI-US)</span>
-                    </div>
-
-                    <div class="today-quality">
-                        <span>Air quality is</span>
-                        <span id="today-quality-label" class="quality-chip quality-good">Good</span>
-                    </div>
-
-                    <div class="today-submetrics">
-                        <div>
-                            <div class="sub-title">PM2.5</div>
-                            <div class="sub-value" id="today-pm25">8 µg/m³</div>
-                        </div>
+                    <div class="today-history">
+                        <h4>Temperature</h4>
+                        <div class="today-temperature-list"></div>
                     </div>
                 </div>
             </div>

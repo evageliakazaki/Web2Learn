@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width" initial scale="1.0">
     <title>Air Quality Dashboard</title>
     <link rel="stylesheet" href="style.css">
     <script src="Web2Learn.js"></script>
 
-    </head>
+</head>
 
-    <body>
-        <header>
-            <img class="logo-img" src="airlimnos_logo_transparent.png" alt="AirLimnos logo">
-            <h1 class="logo">AIR QUALITY DASHBOARD</h1> 
-        </header>
+<body>
+    <header>
+        <img class="logo-img" src="airlimnos_logo_transparent.png" alt="AirLimnos logo">
+        <h1 class="logo">AIR QUALITY DASHBOARD</h1>
+    </header>
     <main>
         <div class="selected-sensor">
             <span id="sensorLabel">No sensor selected</span>
@@ -33,769 +34,826 @@
 
                 <p class="temp-bar-value">20°C</p>
             </div>
-        </div> 
-    
-       
-            <div class="condition" data-weather="rain">
-                <img src="weather images/cloud.png" alt="Cloudy">
-                <p></p>
+        </div>
+
+
+        <div class="condition" data-weather="rain">
+            <img src="weather images/cloud.png" alt="Cloudy">
+            <p></p>
+        </div>
+        <div class="highlow-box">
+            <div class="high-item">
+                <p class="temp"><sup></sup></p>
+                <img src="weather-clear-symbolic-svgrepo-com.svg" alt="High">
+                <span class="label-high-low">HIGH</span>
             </div>
-            <div class="highlow-box">
-                <div class="high-item">
-                    <p class="temp"><sup></sup></p>
-                    <img src="weather-clear-symbolic-svgrepo-com.svg" alt="High">
-                    <span class="label-high-low">HIGH</span>
+
+            <div class="low-item">
+                <p class="temp"><sup></sup></p>
+                <img src="weather-clear-night-symbolic-svgrepo-com.svg" alt="Low">
+                <span class="label-high-low">LOW</span>
+            </div>
+        </div>
+
+
+
+        <section class="today-panel">
+            <h2 class="sectionTitle">
+                <span class="title-toggle title-toggle-active" data-view="today">Today</span>
+                <span class="title-separator"> / </span>
+                <span class="title-toggle" data-view="history">History</span>
+            </h2>
+
+
+            <div class="today-tabs">
+                <button class="today-tab active" data-metric="temperature">Temperature</button>
+                <button class="today-tab" data-metric="aqi">Humidity</button>
+                <button class="today-tab" data-metric="pm25">PM2.5</button>
+                <button class="today-tab" data-metric="noise-level">Noise-Level</button>
+            </div>
+
+
+
+            <div class="today-card">
+                <div class="today-main">
+                    <div class="today-status-row">
+                        <span class="today-dot live"></span>
+                        <span class="today-status-label" id="today-status-label">Live AQI</span>
+                    </div>
+
+                    <div class="today-main-value">
+                        <span id="today-main-number">38</span>
+                        <span id="today-main-unit">(AQI-US)</span>
+                    </div>
+
+                    <div class="today-quality">
+                        <span>Air quality is</span>
+                        <span id="today-quality-label" class="quality-chip quality-good">Good</span>
+                    </div>
+
+                    <div class="today-submetrics">
+                        <div>
+                            <div class="sub-title">PM2.5</div>
+                            <div class="sub-value" id="today-pm25">8 µg/m³</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="history">
+
+                <div class="day-card">
+                    <span class="day-number">16</span>
+                    <div class="day-info">
+                        <span class="month">ΝΟΕΜΒΡΙΟΥ</span>
+                        <span class="weekday">ΤΕΤΑΡΤΗ</span>
+                    </div>
+                    <div class="day-body">
+                        <div class="icon-temp">
+                            <img src="weather images/cloud.png">
+                        </div>
+                        <div class="temp-box">
+                            <span class="temp-high">19°C</span>
+                            <span class="temp-low">16°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric">
+                            <span class="metric-label">PM2.5</span>
+                            <span class="metric-value"> 12 µg/m³</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Humidity</span>
+                            <span class="metric-value">82%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Noise-Level</span>
+                            <span class="metric-value">6 dB</span>
+                        </div>
+                    </div>
+                    <div class="tag tag-green">
+                        ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ ΓΙΑ ΤΗΝ ΕΠΟΧΗ
+                    </div>
                 </div>
 
-                <div class="low-item">
-                    <p class="temp"><sup></sup></p>
-                    <img src="weather-clear-night-symbolic-svgrepo-com.svg" alt="Low">
-                    <span class="label-high-low">LOW</span>
+                <div class="day-card">
+                    <span class="day-number">17</span>
+                    <div class="day-info">
+                        <span class="month">ΝΟΕΜΒΡΙΟΥ</span>
+                        <span class="weekday">ΠΕΜΠΤΗ</span>
+                    </div>
+                    <p class="sun-times">Ανατολή: 07:21 – Δύση: 17:05</p>
+                    <div class="day-body">
+                        <div class="icon-temp">
+                            <img src="weather images/mostly_sunny.png">
+                        </div>
+                        <div class="temp-box">
+                            <span class="temp-high">22°C</span>
+                            <span class="temp-low">19°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric">
+                            <span class="metric-label">PM2.5</span>
+                            <span class="metric-value">10 µg/m³</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Humidity</span>
+                            <span class="metric-value">89%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Noise-Level</span>
+                            <span class="metric-value">2 dB</span>
+                        </div>
+                    </div>
+                    <div class="tag tag-orange">
+                        ΥΨΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ ΓΙΑ ΤΗΝ ΕΠΟΧΗ
+                    </div>
                 </div>
-            </div>
-       
 
-
-<section class="today-panel">
-    <h2 class="sectionTitle">
-        <span class="title-toggle title-toggle-active" data-view="today">Today</span>
-        <span class="title-separator"> / </span>
-        <span class="title-toggle" data-view="history">History</span>
-    </h2>
-
-
-    <div class="today-tabs">
-        <button class="today-tab active" data-metric="temperature">Temperature</button> 
-        <button class="today-tab" data-metric="aqi">Humidity</button>
-        <button class="today-tab" data-metric="pm25">PM2.5</button>
-        <button class="today-tab" data-metric="noise-level">Noise-Level</button>
-    </div>
-
-
-
-    <div class="today-card">
-        <div class="today-main">
-            <div class="today-status-row">
-                <span class="today-dot live"></span>
-                <span class="today-status-label" id="today-status-label">Live AQI</span>
-            </div>
-
-            <div class="today-main-value">
-                <span id="today-main-number">38</span>
-                <span id="today-main-unit">(AQI-US)</span>
-            </div>
-
-            <div class="today-quality">
-                <span>Air quality is</span>
-                <span id="today-quality-label" class="quality-chip quality-good">Good</span>
-            </div>
-
-            <div class="today-submetrics">
-                <div>
-                    <div class="sub-title">PM2.5</div>
-                    <div class="sub-value" id="today-pm25">8 µg/m³</div>
+                <div class="day-card">
+                    <span class="day-number">18</span>
+                    <div class="day-info">
+                        <span class="month">ΝΟΕΜΒΡΙΟΥ</span>
+                        <span class="weekday">ΠΑΡΑΣΚΕΥΗ</span>
+                    </div>
+                    <p class="sun-times">Ανατολή: 07:21 – Δύση: 17:06</p>
+                    <div class="day-body">
+                        <div class="icon-temp">
+                            <img src="weather images/mostly_sunny.png">
+                        </div>
+                        <div class="temp-box">
+                            <span class="temp-high">24°C</span>
+                            <span class="temp-low">19°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric">
+                            <span class="metric-label">PM2.5</span>
+                            <span class="metric-value">15 µg/m³</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Humidity</span>
+                            <span class="metric-value">90%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Noise-Level</span>
+                            <span class="metric-value">9 dB</span>
+                        </div>
+                    </div>
+                    <div class="tag tag-orange">
+                        ΥΨΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ ΓΙΑ ΤΗΝ ΕΠΟΧΗ
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="history">
+                <div class="day-card">
+                    <span class="day-number">19</span>
+                    <div class="day-info">
+                        <span class="month">ΝΟΕΜΒΡΙΟΥ</span>
+                        <span class="weekday">ΣΑΒΒΑΤΟ</span>
+                    </div>
+                    <p class="sun-times">Ανατολή: 07:22 – Δύση: 17:05</p>
+                    <div class="day-body">
+                        <div class="icon-temp">
+                            <img src="weather images/rain_cloud.png">
+                        </div>
+                        <div class="temp-box">
+                            <span class="temp-high">14°C</span>
+                            <span class="temp-low">5°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric">
+                            <span class="metric-label">PM2.5</span>
+                            <span class="metric-value">4 µg/m³</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Humidity</span>
+                            <span class="metric-value">95%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Noise-Level</span>
+                            <span class="metric-value">6 dB</span>
+                        </div>
+                    </div>
+                    <div class="tag tag-blue">
+                        ΧΑΜΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ ΓΙΑ ΤΗΝ ΕΠΟΧΗ
+                    </div>
+                </div>
 
-    <div class="day-card">
-        <span class="day-number">16</span>
-        <div class="day-info">
-            <span class="month">ΝΟΕΜΒΡΙΟΥ</span>
-            <span class="weekday">ΤΕΤΑΡΤΗ</span>
-        </div>
-        <div class="day-body">
-            <div class="icon-temp">
-                <img src="weather images/cloud.png">
-            </div>
-            <div class="temp-box">
-                <span class="temp-high">19°C</span>
-                <span class="temp-low">16°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric">
-                <span class="metric-label">PM2.5</span>
-                <span class="metric-value"> 12 µg/m³</span>
-            </div>
-            <div class="metric">
-                <span class="metric-label">Humidity</span>
-                <span class="metric-value">82%</span>
-            </div>
-            <div class="metric">
-                <span class="metric-label">Noise-Level</span>
-                <span class="metric-value">6 dB</span>
-            </div>
-        </div>
-        <div class="tag tag-green">
-            ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ ΓΙΑ ΤΗΝ ΕΠΟΧΗ
-        </div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">17</span>
-        <div class="day-info">
-            <span class="month">ΝΟΕΜΒΡΙΟΥ</span>
-            <span class="weekday">ΠΕΜΠΤΗ</span>
-        </div>
-        <p class="sun-times">Ανατολή: 07:21 – Δύση: 17:05</p>
-        <div class="day-body">
-            <div class="icon-temp">
-                <img src="weather images/mostly_sunny.png">
-            </div>
-            <div class="temp-box">
-                <span class="temp-high">22°C</span>
-                <span class="temp-low">19°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric">
-                <span class="metric-label">PM2.5</span>
-                <span class="metric-value">10 µg/m³</span>
-            </div>
-            <div class="metric">
-                <span class="metric-label">Humidity</span>
-                <span class="metric-value">89%</span>
-            </div>
-            <div class="metric">
-                <span class="metric-label">Noise-Level</span>
-                <span class="metric-value">2 dB</span>
-            </div>
-        </div>
-        <div class="tag tag-orange">
-            ΥΨΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ ΓΙΑ ΤΗΝ ΕΠΟΧΗ
-        </div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">18</span>
-        <div class="day-info">
-            <span class="month">ΝΟΕΜΒΡΙΟΥ</span>
-            <span class="weekday">ΠΑΡΑΣΚΕΥΗ</span>
-        </div>
-        <p class="sun-times">Ανατολή: 07:21 – Δύση: 17:06</p>
-        <div class="day-body">
-            <div class="icon-temp">
-                <img src="weather images/mostly_sunny.png">
-            </div>
-            <div class="temp-box">
-                <span class="temp-high">24°C</span>
-                <span class="temp-low">19°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric">
-                <span class="metric-label">PM2.5</span>
-                <span class="metric-value">15 µg/m³</span>
-            </div>
-            <div class="metric">
-                <span class="metric-label">Humidity</span>
-                <span class="metric-value">90%</span>
-            </div>
-            <div class="metric">
-                <span class="metric-label">Noise-Level</span>
-                <span class="metric-value">9 dB</span>
-            </div>
-        </div>
-        <div class="tag tag-orange">
-            ΥΨΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ ΓΙΑ ΤΗΝ ΕΠΟΧΗ
-        </div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">19</span>
-        <div class="day-info">
-            <span class="month">ΝΟΕΜΒΡΙΟΥ</span>
-            <span class="weekday">ΣΑΒΒΑΤΟ</span>
-        </div>
-        <p class="sun-times">Ανατολή: 07:22 – Δύση: 17:05</p>
-        <div class="day-body">
-            <div class="icon-temp">
-                <img src="weather images/rain_cloud.png">
-            </div>
-            <div class="temp-box">
-                <span class="temp-high">14°C</span>
-                <span class="temp-low">5°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric">
-                <span class="metric-label">PM2.5</span>
-                <span class="metric-value">4 µg/m³</span>
-            </div>
-            <div class="metric">
-                <span class="metric-label">Humidity</span>
-                <span class="metric-value">95%</span>
-            </div>
-            <div class="metric">
-                <span class="metric-label">Noise-Level</span>
-                <span class="metric-value">6 dB</span>
-            </div>
-        </div>
-        <div class="tag tag-blue">
-            ΧΑΜΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ ΓΙΑ ΤΗΝ ΕΠΟΧΗ
-        </div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">20</span>
-        <div class="day-info">
-            <span class="month">ΝΟΕΜΒΡΙΟΥ</span>
-            <span class="weekday">ΚΥΡΙΑΚΗ</span>
-        </div>
-        <p class="sun-times">Ανατολή: 07:20 – Δύση: 17:05</p>
-        <div class="day-body">
-            <div class="icon-temp">
-                <img src="weather images/rain_cloud.png">
-            </div>
-            <div class="temp-box">
-                <span class="temp-high">13°C</span>
-                <span class="temp-low">7°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric">
-                <span class="metric-label">PM2.5</span>
-                <span class="metric-value">3 µg/m³</span>
-            </div>
-            <div class="metric">
-                <span class="metric-label">Humidity</span>
-                <span class="metric-value">75%</span>
-            </div>
-            <div class="metric">
-                <span class="metric-label">Noise-Level</span>
-                <span class="metric-value">4 dB</span>
-            </div>
-        </div>
-        <div class="tag tag-blue">
-            ΧΑΜΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ ΓΙΑ ΤΗΝ ΕΠΟΧΗ
-        </div>
-    </div>
+                <div class="day-card">
+                    <span class="day-number">20</span>
+                    <div class="day-info">
+                        <span class="month">ΝΟΕΜΒΡΙΟΥ</span>
+                        <span class="weekday">ΚΥΡΙΑΚΗ</span>
+                    </div>
+                    <p class="sun-times">Ανατολή: 07:20 – Δύση: 17:05</p>
+                    <div class="day-body">
+                        <div class="icon-temp">
+                            <img src="weather images/rain_cloud.png">
+                        </div>
+                        <div class="temp-box">
+                            <span class="temp-high">13°C</span>
+                            <span class="temp-low">7°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric">
+                            <span class="metric-label">PM2.5</span>
+                            <span class="metric-value">3 µg/m³</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Humidity</span>
+                            <span class="metric-value">75%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Noise-Level</span>
+                            <span class="metric-value">4 dB</span>
+                        </div>
+                    </div>
+                    <div class="tag tag-blue">
+                        ΧΑΜΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ ΓΙΑ ΤΗΝ ΕΠΟΧΗ
+                    </div>
+                </div>
 
 
-    <div class="day-card">
-        <span class="day-number">21</span>
-        <div class="day-info"><span class="month">ΝΟΕΜΒΡΙΟΥ</span><span class="weekday">ΔΕΥΤΕΡΑ</span></div>
-        <p class="sun-times">Ανατολή: 07:24 – Δύση: 17:04</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/cloud.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">16°C</span>
-                <span class="temp-low">10°C</span>
+                <div class="day-card">
+                    <span class="day-number">21</span>
+                    <div class="day-info"><span class="month">ΝΟΕΜΒΡΙΟΥ</span><span class="weekday">ΔΕΥΤΕΡΑ</span></div>
+                    <p class="sun-times">Ανατολή: 07:24 – Δύση: 17:04</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/cloud.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">16°C</span>
+                            <span class="temp-low">10°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 10
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                72%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 5
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">22</span>
+                    <div class="day-info"><span class="month">ΝΟΕΜΒΡΙΟΥ</span><span class="weekday">ΤΡΙΤΗ</span></div>
+                    <p class="sun-times">Ανατολή: 07:25 – Δύση: 17:04</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/rain_cloud.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">13°C</span>
+                            <span class="temp-low">7°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 12
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                88%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 6
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-blue">ΧΑΜΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">23</span>
+                    <div class="day-info"><span class="month">ΝΟΕΜΒΡΙΟΥ</span><span class="weekday">ΤΕΤΑΡΤΗ</span></div>
+                    <p class="sun-times">Ανατολή: 07:26 – Δύση: 17:03</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/sunny.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">20°C</span>
+                            <span class="temp-low">11°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 6
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                55%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 5
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-orange">ΥΨΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">24</span>
+                    <div class="day-info"><span class="month">ΝΟΕΜΒΡΙΟΥ</span><span class="weekday">ΠΕΜΠΤΗ</span></div>
+                    <p class="sun-times">Ανατολή: 07:27 – Δύση: 17:03</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/cloud.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">18°C</span>
+                            <span class="temp-low">12°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 8
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                65%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 4
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">25</span>
+                    <div class="day-info"><span class="month">ΝΟΕΜΒΡΙΟΥ</span><span class="weekday">ΠΑΡΑΣΚΕΥΗ</span>
+                    </div>
+                    <p class="sun-times">Ανατολή: 07:28 – Δύση: 17:02</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/thunder_cloud_and_rain.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">12°C</span>
+                            <span class="temp-low">6°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 14
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                92%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 7
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-blue">ΧΑΜΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">26</span>
+                    <div class="day-info"><span class="month">ΝΟΕΜΒΡΙΟΥ</span><span class="weekday">ΣΑΒΒΑΤΟ</span></div>
+                    <p class="sun-times">Ανατολή: 07:29 – Δύση: 17:02</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/cloud.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">15°C</span>
+                            <span class="temp-low">10°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 9
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                78%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 5
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">27</span>
+                    <div class="day-info"><span class="month">ΝΟΕΜΒΡΙΟΥ</span><span class="weekday">ΚΥΡΙΑΚΗ</span></div>
+                    <p class="sun-times">Ανατολή: 07:30 – Δύση: 17:02</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/sunny.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">19°C</span>
+                            <span class="temp-low">8°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 5
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                54%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 3
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-orange">ΥΨΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">28</span>
+                    <div class="day-info"><span class="month">ΝΟΕΜΒΡΙΟΥ</span><span class="weekday">ΔΕΥΤΕΡΑ</span></div>
+                    <p class="sun-times">Ανατολή: 07:31 – Δύση: 17:02</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/rain_cloud.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">14°C</span>
+                            <span class="temp-low">9°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 11
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                80%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 5
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">29</span>
+                    <div class="day-info"><span class="month">ΝΟΕΜΒΡΙΟΥ</span><span class="weekday">ΤΡΙΤΗ</span></div>
+                    <p class="sun-times">Ανατολή: 07:32 – Δύση: 17:02</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/mostly_sunny.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">17°C</span>
+                            <span class="temp-low">12°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 7
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                63%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 5
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">30</span>
+                    <div class="day-info"><span class="month">ΝΟΕΜΒΡΙΟΥ</span><span class="weekday">ΤΕΤΑΡΤΗ</span></div>
+                    <p class="sun-times">Ανατολή: 07:33 – Δύση: 17:02</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/cloud.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">15°C</span>
+                            <span class="temp-low">8°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 8
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                72%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 4
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">1</span>
+                    <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΠΕΜΠΤΗ</span></div>
+                    <p class="sun-times">Ανατολή: 07:34 – Δύση: 17:01</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/rain_cloud.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">10°C</span>
+                            <span class="temp-low">5°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 13
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                90%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 6
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-blue">ΧΑΜΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">2</span>
+                    <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΠΑΡΑΣΚΕΥΗ</span>
+                    </div>
+                    <p class="sun-times">Ανατολή: 07:35 – Δύση: 17:01</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/mostly_sunny.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">17°C</span>
+                            <span class="temp-low">11°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 6
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                70%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 4
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-orange">ΥΨΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">3</span>
+                    <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΣΑΒΒΑΤΟ</span>
+                    </div>
+                    <p class="sun-times">Ανατολή: 07:36 – Δύση: 17:01</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/cloud.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">14°C</span>
+                            <span class="temp-low">7°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 9
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                79%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 5
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">4</span>
+                    <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΚΥΡΙΑΚΗ</span>
+                    </div>
+                    <p class="sun-times">Ανατολή: 07:36 – Δύση: 17:00</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/rain_cloud.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">12°C</span>
+                            <span class="temp-low">6°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 14
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                90%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 6
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-blue">ΧΑΜΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">5</span>
+                    <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΔΕΥΤΕΡΑ</span>
+                    </div>
+                    <p class="sun-times">Ανατολή: 07:37 – Δύση: 17:00</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/mostly_sunny.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">15°C</span>
+                            <span class="temp-low">9°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 7
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                67%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 4
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">6</span>
+                    <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΤΡΙΤΗ</span></div>
+                    <p class="sun-times">Ανατολή: 07:38 – Δύση: 17:00</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/sunny.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">18°C</span>
+                            <span class="temp-low">11°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 6
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                58%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 4
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-orange">ΥΨΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">7</span>
+                    <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΤΕΤΑΡΤΗ</span>
+                    </div>
+                    <p class="sun-times">Ανατολή: 07:39 – Δύση: 17:00</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/cloud.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">16°C</span>
+                            <span class="temp-low">9°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 7
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                70%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 5
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">8</span>
+                    <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΠΕΜΠΤΗ</span></div>
+                    <p class="sun-times">Ανατολή: 07:40 – Δύση: 17:00</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/mostly_sunny.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">19°C</span>
+                            <span class="temp-low">12°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 6
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                60%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 4
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-orange">ΥΨΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">9</span>
+                    <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΠΑΡΑΣΚΕΥΗ</span>
+                    </div>
+                    <p class="sun-times">Ανατολή: 07:40 – Δύση: 17:01</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/rain_cloud.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">11°C</span>
+                            <span class="temp-low">6°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 14
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                92%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 6
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-blue">ΧΑΜΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">10</span>
+                    <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΣΑΒΒΑΤΟ</span>
+                    </div>
+                    <p class="sun-times">Ανατολή: 07:40 – Δύση: 17:01</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/cloud.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">15°C</span>
+                            <span class="temp-low">9°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 10
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                70%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 5
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">11</span>
+                    <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΚΥΡΙΑΚΗ</span>
+                    </div>
+                    <p class="sun-times">Ανατολή: 07:41 – Δύση: 17:01</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/sunny.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">18°C</span>
+                            <span class="temp-low">11°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 7
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                66%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 4
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-orange">ΥΨΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">12</span>
+                    <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΔΕΥΤΕΡΑ</span>
+                    </div>
+                    <p class="sun-times">Ανατολή: 07:42 – Δύση: 17:01</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/cloud.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">14°C</span>
+                            <span class="temp-low">7°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 9
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                73%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 5
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">13</span>
+                    <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΤΡΙΤΗ</span></div>
+                    <p class="sun-times">Ανατολή: 07:42 – Δύση: 17:02</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/rain_cloud.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">11°C</span>
+                            <span class="temp-low">6°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 12
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                88%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 6
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-blue">ΧΑΜΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
+                <div class="day-card">
+                    <span class="day-number">14</span>
+                    <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΤΕΤΑΡΤΗ</span>
+                    </div>
+                    <p class="sun-times">Ανατολή: 07:43 – Δύση: 17:02</p>
+                    <div class="day-body">
+                        <div class="icon-temp"><img src="weather images/cloud.png"></div>
+                        <div class="temp-box">
+                            <span class="temp-high">13°C</span>
+                            <span class="temp-low">7°C</span>
+                        </div>
+                    </div>
+                    <div class="metrics-row">
+                        <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 10
+                                µg/m³</span></div>
+                        <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value">
+                                79%</span></div>
+                        <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 5
+                                dB</span></div>
+                    </div>
+                    <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
+                </div>
+
             </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 10 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 72%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 5 dB</span></div>
-        </div>
-        <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
 
-    <div class="day-card">
-        <span class="day-number">22</span>
-        <div class="day-info"><span class="month">ΝΟΕΜΒΡΙΟΥ</span><span class="weekday">ΤΡΙΤΗ</span></div>
-        <p class="sun-times">Ανατολή: 07:25 – Δύση: 17:04</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/rain_cloud.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">13°C</span>
-                <span class="temp-low">7°C</span>
+
+            <button id="historyToggleBtn" class="history-toggle-btn">
+                Show full month
+            </button>
+
             </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 12 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 88%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 6 dB</span></div>
-        </div>
-        <div class="tag tag-blue">ΧΑΜΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">23</span>
-        <div class="day-info"><span class="month">ΝΟΕΜΒΡΙΟΥ</span><span class="weekday">ΤΕΤΑΡΤΗ</span></div>
-        <p class="sun-times">Ανατολή: 07:26 – Δύση: 17:03</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/sunny.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">20°C</span>
-                <span class="temp-low">11°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 6 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 55%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 5 dB</span></div>
-        </div>
-        <div class="tag tag-orange">ΥΨΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">24</span>
-        <div class="day-info"><span class="month">ΝΟΕΜΒΡΙΟΥ</span><span class="weekday">ΠΕΜΠΤΗ</span></div>
-        <p class="sun-times">Ανατολή: 07:27 – Δύση: 17:03</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/cloud.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">18°C</span>
-                <span class="temp-low">12°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 8 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 65%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 4 dB</span></div>
-        </div>
-        <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">25</span>
-        <div class="day-info"><span class="month">ΝΟΕΜΒΡΙΟΥ</span><span class="weekday">ΠΑΡΑΣΚΕΥΗ</span></div>
-        <p class="sun-times">Ανατολή: 07:28 – Δύση: 17:02</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/thunder_cloud_and_rain.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">12°C</span>
-                <span class="temp-low">6°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 14 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 92%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 7 dB</span></div>
-        </div>
-        <div class="tag tag-blue">ΧΑΜΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">26</span>
-        <div class="day-info"><span class="month">ΝΟΕΜΒΡΙΟΥ</span><span class="weekday">ΣΑΒΒΑΤΟ</span></div>
-        <p class="sun-times">Ανατολή: 07:29 – Δύση: 17:02</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/cloud.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">15°C</span>
-                <span class="temp-low">10°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 9 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 78%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 5 dB</span></div>
-        </div>
-        <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">27</span>
-        <div class="day-info"><span class="month">ΝΟΕΜΒΡΙΟΥ</span><span class="weekday">ΚΥΡΙΑΚΗ</span></div>
-        <p class="sun-times">Ανατολή: 07:30 – Δύση: 17:02</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/sunny.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">19°C</span>
-                <span class="temp-low">8°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 5 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 54%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 3 dB</span></div>
-        </div>
-        <div class="tag tag-orange">ΥΨΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">28</span>
-        <div class="day-info"><span class="month">ΝΟΕΜΒΡΙΟΥ</span><span class="weekday">ΔΕΥΤΕΡΑ</span></div>
-        <p class="sun-times">Ανατολή: 07:31 – Δύση: 17:02</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/rain_cloud.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">14°C</span>
-                <span class="temp-low">9°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 11 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 80%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 5 dB</span></div>
-        </div>
-        <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">29</span>
-        <div class="day-info"><span class="month">ΝΟΕΜΒΡΙΟΥ</span><span class="weekday">ΤΡΙΤΗ</span></div>
-        <p class="sun-times">Ανατολή: 07:32 – Δύση: 17:02</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/mostly_sunny.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">17°C</span>
-                <span class="temp-low">12°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 7 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 63%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 5 dB</span></div>
-        </div>
-        <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">30</span>
-        <div class="day-info"><span class="month">ΝΟΕΜΒΡΙΟΥ</span><span class="weekday">ΤΕΤΑΡΤΗ</span></div>
-        <p class="sun-times">Ανατολή: 07:33 – Δύση: 17:02</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/cloud.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">15°C</span>
-                <span class="temp-low">8°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 8 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 72%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 4 dB</span></div>
-        </div>
-        <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">1</span>
-        <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΠΕΜΠΤΗ</span></div>
-        <p class="sun-times">Ανατολή: 07:34 – Δύση: 17:01</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/rain_cloud.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">10°C</span>
-                <span class="temp-low">5°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 13 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 90%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 6 dB</span></div>
-        </div>
-        <div class="tag tag-blue">ΧΑΜΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">2</span>
-        <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΠΑΡΑΣΚΕΥΗ</span></div>
-        <p class="sun-times">Ανατολή: 07:35 – Δύση: 17:01</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/mostly_sunny.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">17°C</span>
-                <span class="temp-low">11°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 6 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 70%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 4 dB</span></div>
-        </div>
-        <div class="tag tag-orange">ΥΨΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">3</span>
-        <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΣΑΒΒΑΤΟ</span></div>
-        <p class="sun-times">Ανατολή: 07:36 – Δύση: 17:01</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/cloud.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">14°C</span>
-                <span class="temp-low">7°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 9 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 79%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 5 dB</span></div>
-        </div>
-        <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">4</span>
-        <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΚΥΡΙΑΚΗ</span></div>
-        <p class="sun-times">Ανατολή: 07:36 – Δύση: 17:00</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/rain_cloud.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">12°C</span>
-                <span class="temp-low">6°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 14 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 90%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 6 dB</span></div>
-        </div>
-        <div class="tag tag-blue">ΧΑΜΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">5</span>
-        <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΔΕΥΤΕΡΑ</span></div>
-        <p class="sun-times">Ανατολή: 07:37 – Δύση: 17:00</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/mostly_sunny.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">15°C</span>
-                <span class="temp-low">9°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 7 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 67%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 4 dB</span></div>
-        </div>
-        <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">6</span>
-        <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΤΡΙΤΗ</span></div>
-        <p class="sun-times">Ανατολή: 07:38 – Δύση: 17:00</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/sunny.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">18°C</span>
-                <span class="temp-low">11°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 6 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 58%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 4 dB</span></div>
-        </div>
-        <div class="tag tag-orange">ΥΨΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">7</span>
-        <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΤΕΤΑΡΤΗ</span></div>
-        <p class="sun-times">Ανατολή: 07:39 – Δύση: 17:00</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/cloud.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">16°C</span>
-                <span class="temp-low">9°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 7 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 70%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 5 dB</span></div>
-        </div>
-        <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">8</span>
-        <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΠΕΜΠΤΗ</span></div>
-        <p class="sun-times">Ανατολή: 07:40 – Δύση: 17:00</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/mostly_sunny.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">19°C</span>
-                <span class="temp-low">12°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 6 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 60%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 4 dB</span></div>
-        </div>
-        <div class="tag tag-orange">ΥΨΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">9</span>
-        <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΠΑΡΑΣΚΕΥΗ</span></div>
-        <p class="sun-times">Ανατολή: 07:40 – Δύση: 17:01</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/rain_cloud.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">11°C</span>
-                <span class="temp-low">6°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 14 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 92%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 6 dB</span></div>
-        </div>
-        <div class="tag tag-blue">ΧΑΜΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">10</span>
-        <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΣΑΒΒΑΤΟ</span></div>
-        <p class="sun-times">Ανατολή: 07:40 – Δύση: 17:01</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/cloud.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">15°C</span>
-                <span class="temp-low">9°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 10 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 70%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 5 dB</span></div>
-        </div>
-        <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">11</span>
-        <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΚΥΡΙΑΚΗ</span></div>
-        <p class="sun-times">Ανατολή: 07:41 – Δύση: 17:01</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/sunny.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">18°C</span>
-                <span class="temp-low">11°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 7 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 66%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 4 dB</span></div>
-        </div>
-        <div class="tag tag-orange">ΥΨΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">12</span>
-        <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΔΕΥΤΕΡΑ</span></div>
-        <p class="sun-times">Ανατολή: 07:42 – Δύση: 17:01</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/cloud.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">14°C</span>
-                <span class="temp-low">7°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 9 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 73%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 5 dB</span></div>
-        </div>
-        <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">13</span>
-        <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΤΡΙΤΗ</span></div>
-        <p class="sun-times">Ανατολή: 07:42 – Δύση: 17:02</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/rain_cloud.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">11°C</span>
-                <span class="temp-low">6°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 12 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 88%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 6 dB</span></div>
-        </div>
-        <div class="tag tag-blue">ΧΑΜΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-    <div class="day-card">
-        <span class="day-number">14</span>
-        <div class="day-info"><span class="month">ΔΕΚΕΜΒΡΙΟΥ</span><span class="weekday">ΤΕΤΑΡΤΗ</span></div>
-        <p class="sun-times">Ανατολή: 07:43 – Δύση: 17:02</p>
-        <div class="day-body">
-            <div class="icon-temp"><img src="weather images/cloud.png"></div>
-            <div class="temp-box">
-                <span class="temp-high">13°C</span>
-                <span class="temp-low">7°C</span>
-            </div>
-        </div>
-        <div class="metrics-row">
-            <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> 10 µg/m³</span></div>
-            <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> 79%</span></div>
-            <div class="metric"><span class="metric-label">Noise-Level</span><span class="metric-value"> 5 dB</span></div>
-        </div>
-        <div class="tag tag-green">ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ</div>
-    </div>
-
-</div>
-
-
-        <button id="historyToggleBtn" class="history-toggle-btn">
-            Show full month
-        </button>
-
-    </div>
-
-
-    <div class="today-weather">
-        <div class="today-weather-top">
-            <div class="today-weather-icon">🌧️</div>
-            <div class="today-weather-main">
-                <div id="today-temp">10°C</div>
-                <div id="today-condition">Light rain</div>
-            </div>
-        </div>
-
-        <div class="today-weather-grid">
-            <div>
-                <div class="sub-title">Humidity</div>
-                <div class="sub-value" id="today-humidity">100%</div>
-            </div>
-            <div>
-                <div class="sub-title">PM2.5</div>
-                <div class="sub-value" id="today-wind">6 km/h</div>
-            </div>
-            <div>
-                <div class="sub-title">Noise Level</div>
-                <div class="sub-value" id="today-uv">0</div>
-            </div>
-        </div>
-    </div>
-
-</section>
+        </section>
 
 
 
-  
-    <section class="highlights">
-        <h2 class="sectionTitle">Today's Highlights</h2>
 
-        <div class="card" data-type="temp">
-            <h2 class="temperature">TEMPERATURE</h2>
-            <p class="value" data-value="22"></p>
-        </div>
+        <section class="highlights">
+            <h2 class="sectionTitle">Today's Highlights</h2>
 
-        <div class="card" data-type="humidity">
-            <h2 class="humidity">HUMIDITY</h2>
-            <p class="value" data-value="25"></p>
-        </div>
+            <div class="card" data-type="temp">
+                <h2 class="temperature">TEMPERATURE</h2>
+                <p class="value" data-value="22"></p>
+            </div>
 
-        <div class="card" data-type="pm25">
-            <h2 class="pm2.5">PM2.5</h2>
-            <p class="value" data-value="1050"></p>
-        </div>
+            <div class="card" data-type="humidity">
+                <h2 class="humidity">HUMIDITY</h2>
+                <p class="value" data-value="25"></p>
+            </div>
 
-        <div class="card" data-type="noise-level">
-            <h2 class="noise-level">NOISE LEVEL</h2>
-            <p class="value" data-value="6"></p>
-        </div>
-    </section>
-</main>
+            <div class="card" data-type="pm25">
+                <h2 class="pm2.5">PM2.5</h2>
+                <p class="value" data-value="1050"></p>
+            </div>
 
-    </body>
+            <div class="card" data-type="noise-level">
+                <h2 class="noise-level">NOISE LEVEL</h2>
+                <p class="value" data-value="6"></p>
+            </div>
+        </section>
+    </main>
+
+</body>
+
 </html>

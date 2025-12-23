@@ -17,12 +17,12 @@ const getSensorData = async (deviceId) => {
         const device = await response.json();
 
         const targetIds = Object.values(SENSOR_MAPPING);
-        
+
         const selected = device.data.sensors
             .filter(sensor => targetIds.includes(sensor.id))
             .map(sensor => ({
                 id: sensor.id,
-                name: sensor.name, 
+                name: sensor.name,
                 value: sensor.value ?? null,
                 unit: sensor.unit,
                 timestamp: sensor.last_reading_at
@@ -63,10 +63,10 @@ const getHistoricalReadings = async (deviceId, sensorId, from, to, rollup = "4h"
 async function updateHighLow(deviceId, referenceDateStr) {
     const refDate = referenceDateStr ? new Date(referenceDateStr) : new Date();
     const fromDate = new Date(refDate);
-    fromDate.setUTCHours(0,0,0,0);
+    fromDate.setUTCHours(0, 0, 0, 0);
     const toDate = new Date(refDate);
     toDate.setDate(toDate.getDate() + 1);
-    
+
     const isoFrom = fromDate.toISOString().split('T')[0];
     const isoTo = toDate.toISOString().split('T')[0];
 
@@ -118,7 +118,7 @@ async function updateHistorySection(deviceId) {
     const processData = (data, key) => {
         if (!data) return;
         data.forEach(point => {
-            const dateKey = point[0].split('T')[0]; 
+            const dateKey = point[0].split('T')[0];
             if (!daysMap[dateKey]) daysMap[dateKey] = { date: dateKey };
             daysMap[dateKey][key] = point[1];
         });
@@ -133,9 +133,9 @@ async function updateHistorySection(deviceId) {
     const sortedDays = Object.values(daysMap).sort((a, b) => b.date.localeCompare(a.date));
 
     // E. Generate HTML
-    historyContainer.innerHTML = ""; 
+    historyContainer.innerHTML = "";
 
-    if(sortedDays.length === 0) {
+    if (sortedDays.length === 0) {
         historyContainer.innerHTML = "<p style='text-align:center;'>No history data found.</p>";
         return;
     }
@@ -152,8 +152,8 @@ async function updateHistorySection(deviceId) {
         const dayName = greekDays[d.getDay()];
 
         const avgTemp = Math.round(day.temp);
-        const highTemp = avgTemp + 3; 
-        const lowTemp = avgTemp - 2;  
+        const highTemp = avgTemp + 3;
+        const lowTemp = avgTemp - 2;
         const hum = day.hum ? Math.round(day.hum) : "-";
         const pm25 = day.pm25 ? Math.round(day.pm25) : "-";
         const noise = day.noise ? Math.round(day.noise) : "-";
@@ -164,7 +164,7 @@ async function updateHistorySection(deviceId) {
 
         let tagClass = "tag-green";
         let tagText = "ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ";
-        
+
         if (avgTemp > 25) {
             tagClass = "tag-orange";
             tagText = "ΥΨΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ";
@@ -235,7 +235,7 @@ function updateWeatherCondition(sensorData) {
     const now = new Date();
     const dayName = now.toLocaleDateString('en-US', { weekday: 'long' });
     const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
-    
+
     const textEl = conditionEl.querySelector("p");
     if (textEl) textEl.textContent = `${dayName}, ${timeStr}`;
 
@@ -244,7 +244,7 @@ function updateWeatherCondition(sensorData) {
 
     if (humSensor && imgEl) {
         const humidity = parseFloat(humSensor.value);
-        let iconName = "clear"; 
+        let iconName = "clear";
 
         if (humidity >= 75) iconName = "rain";
         else if (humidity >= 50) iconName = "mist";
@@ -295,8 +295,8 @@ function updateHighlights(sensorData) {
 
         // 🔥 Remove ALL possible color classes first
         card.classList.remove(
-            "card-cold","card-cool","card-comfortable","card-warm","card-hot",
-            "card-green","card-light-green","card-yellow","card-orange","card-red"
+            "card-cold", "card-cool", "card-comfortable", "card-warm", "card-hot",
+            "card-green", "card-light-green", "card-yellow", "card-orange", "card-red"
         );
 
         // 🎯 Apply correct color logic
@@ -328,7 +328,7 @@ function updateHighlights(sensorData) {
                 break;
 
 
-           case "pm25":
+            case "pm25":
                 if (value <= 5) card.classList.add("card-green");
                 else if (value <= 15) card.classList.add("card-light-green");
                 else if (value <= 25) card.classList.add("card-yellow");
@@ -351,19 +351,19 @@ function updateHighlights(sensorData) {
 function applyMetric(metricKey, sensorData) {
     let selectedSensor;
     let qualityText = "N/A";
-    let qualityClass = "moderate"; 
+    let qualityClass = "moderate";
 
-    switch(metricKey) {
-        case "temperature": 
+    switch (metricKey) {
+        case "temperature":
             selectedSensor = sensorData.find(s => s.id === SENSOR_MAPPING.TEMP_ID);
             if (selectedSensor) {
                 const val = parseFloat(selectedSensor.value);
-                if (val <= 10) { qualityText = "Cold"; qualityClass = "blue"; } 
+                if (val <= 10) { qualityText = "Cold"; qualityClass = "blue"; }
                 else if (val < 25) { qualityText = "Normal"; qualityClass = "good"; }
                 else { qualityText = "Hot"; qualityClass = "bad"; }
             }
             break;
-        case "aqi": 
+        case "aqi":
             selectedSensor = sensorData.find(s => s.id === SENSOR_MAPPING.HUMIDITY_ID);
             if (selectedSensor) {
                 const val = parseFloat(selectedSensor.value);
@@ -372,7 +372,7 @@ function applyMetric(metricKey, sensorData) {
                 else { qualityText = "Humid"; qualityClass = "bad"; }
             }
             break;
-        case "pm25": 
+        case "pm25":
             selectedSensor = sensorData.find(s => s.id === SENSOR_MAPPING.PM25_ID);
             if (selectedSensor) {
                 const val = parseFloat(selectedSensor.value);
@@ -381,7 +381,7 @@ function applyMetric(metricKey, sensorData) {
                 else { qualityText = "Unhealthy"; qualityClass = "bad"; }
             }
             break;
-        case "noise-level": 
+        case "noise-level":
             selectedSensor = sensorData.find(s => s.id === SENSOR_MAPPING.NOISE_ID);
             if (selectedSensor) {
                 const val = parseFloat(selectedSensor.value);
@@ -395,52 +395,31 @@ function applyMetric(metricKey, sensorData) {
 
     if (selectedSensor) {
         document.getElementById("today-status-label").textContent = selectedSensor.name;
-        const displayVal = (metricKey === 'pm25' || metricKey === 'noise-level') 
-            ? Math.round(selectedSensor.value) 
+        const displayVal = (metricKey === 'pm25' || metricKey === 'noise-level')
+            ? Math.round(selectedSensor.value)
             : parseFloat(selectedSensor.value).toFixed(1);
         document.getElementById("today-main-number").textContent = displayVal;
         document.getElementById("today-main-unit").textContent = selectedSensor.unit;
         const qLabel = document.getElementById("today-quality-label");
         qLabel.textContent = qualityText;
-        qLabel.classList.remove("quality-good","quality-moderate","quality-bad", "quality-blue");
-        if(qualityClass === 'blue') qLabel.classList.add("quality-good"); 
+        qLabel.classList.remove("quality-good", "quality-moderate", "quality-bad", "quality-blue");
+        if (qualityClass === 'blue') qLabel.classList.add("quality-good");
         else qLabel.classList.add("quality-" + qualityClass);
     }
 }
 
-// ** 9. UPDATE AUXILIARY DATA **
-function applyRealtimeData(sensorData) {
-    const temp = sensorData.find(s => s.id === SENSOR_MAPPING.TEMP_ID);
-    const hum = sensorData.find(s => s.id === SENSOR_MAPPING.HUMIDITY_ID);
-    const pm25 = sensorData.find(s => s.id === SENSOR_MAPPING.PM25_ID);
-    const noise = sensorData.find(s => s.id === SENSOR_MAPPING.NOISE_ID);
-
-    if (temp) {
-        document.getElementById("today-temp").textContent = Math.round(temp.value) + "°C";
-        updateTempWidget(parseFloat(temp.value));
-    }
-    if (hum) document.getElementById("today-humidity").textContent = Math.round(hum.value) + "%";
-    if (pm25) {
-        const pmEl = document.getElementById("today-pm25"); 
-        if(pmEl) pmEl.textContent = Math.round(pm25.value) + " µg/m³";
-    }
-    if (noise) {
-         const uvEl = document.getElementById("today-uv"); 
-         if(uvEl) uvEl.textContent = Math.round(noise.value) + " dB";
-    }
-}
 
 // ** MAIN RUNNER **
 async function updateDashboard() {
     const params = new URLSearchParams(window.location.search);
-    const deviceId = params.get("id") || "19225"; 
+    const deviceId = params.get("id") || "19225";
 
     // --- Fetch Live Data ---
     const result = await getSensorData(deviceId);
-    
+
     const labelEl = document.getElementById("sensorLabel");
     if (labelEl) {
-        if(result.info && result.info.name) {
+        if (result.info && result.info.name) {
             labelEl.textContent = `${result.info.city} - ${result.info.name} - ${result.info.latitude} - ${result.info.longitude}`;
         } else {
             labelEl.textContent = "Loading...";
@@ -451,7 +430,6 @@ async function updateDashboard() {
 
     if (sensorData.length > 0) {
         updateHighlights(sensorData);
-        applyRealtimeData(sensorData);
         updateWeatherCondition(sensorData);
 
         const tempSensor = sensorData.find(s => s.id === SENSOR_MAPPING.TEMP_ID);
@@ -508,7 +486,7 @@ async function updateDashboard() {
 
     } else {
         console.warn("No live sensor data found.");
-        if(labelEl) labelEl.textContent = "Sensor Offline or No Data";
+        if (labelEl) labelEl.textContent = "Sensor Offline or No Data";
     }
 }
 

@@ -239,17 +239,7 @@ main {
 
     padding: 28px 30px;
     border-radius: 26px;
-
-    background: linear-gradient(135deg,
-            rgba(200, 245, 200, 0.95),
-            rgba(140, 220, 160, 0.95));
-
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-
-    box-shadow:
-        0 12px 30px rgba(0, 0, 0, 0.25),
-        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    background-color: white;
 
     color: #1c3b2b;
     overflow: hidden;
@@ -274,46 +264,85 @@ main {
 }
 
 /* === TODAY HISTORY (Last 5 Days) -> 5 τετραγωνάκια μέσα στο πράσινο === */
-.today-history h4 {
-    font-size: 1.05rem;
-    font-weight: 800;
-    margin-bottom: 12px;
-    letter-spacing: 0.2px;
+/* σωστό selector (λείπει τελεία) */
+.today-history h4{
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+  letter-spacing: 0.2px;
 }
 
-.today-temperature-list {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    /* χώρισε σε 5 */
-    gap: 12px;
-    align-items: stretch;
+.today-temperature-list,
+.today-humidity-list,
+.today-pm25-list,
+.today-noise-list{
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  align-items: stretch;
 }
 
-.today-history-item {
-    background: rgba(255, 255, 255, 0.55);
-    border: 1px solid rgba(28, 59, 43, 0.12);
-    border-radius: 14px;
-    padding: 12px 10px;
-    box-shadow:
-        0 8px 16px rgba(0, 0, 0, 0.10),
-        inset 0 1px 0 rgba(255, 255, 255, 0.55);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 6px;
-    min-height: 84px;
+.today-history-item{
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 14px;
+  padding: 12px 10px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.10),
+              inset 0 1px 0 rgba(255,255,255,0.55);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  min-height: 84px;
 }
 
-.today-history-item .day {
-    font-size: 0.85rem;
-    font-weight: 700;
-    opacity: 0.85;
+.today-history-item .day{
+  font-size: 0.85rem;
+  font-weight: 700;
+  opacity: 0.85;
 }
 
-.today-history-item .temp {
-    font-size: 1.35rem;
-    font-weight: 900;
+/* ΕΣΥ renderάρεις .vals (όχι .temp) */
+.today-history-item .vals{
+  display: flex;
+  gap: 10px;
+  font-weight: 900;
+  font-size: 1.25rem;
 }
+
+/* TEMPERATURE */
+.theme-temp .today-history-item{ border-color: rgba(0,0,0,.35); }
+.theme-temp .val-high{ color:#e53935; }
+.theme-temp .val-low { color:#1e88e5; }
+
+/* HUMIDITY */
+.theme-hum .today-history-item{
+  border-color: rgba(120,81,169,.35);
+  background: rgba(255,255,255,.65);
+}
+.theme-hum .val-high{ color:#e53935; }
+.theme-hum .val-low { color:#1e88e5; }
+
+/* PM2.5 */
+
+.theme-pm25 .unit{
+  font-size: 0.80rem;   
+  font-weight: 700;
+  opacity: 0.85;
+  margin-left: 2px;
+}
+
+.theme-pm25 .today-history-item{ border-color: rgba(245,124,0,.35); }
+.theme-pm25 .val-high{ color:#e53935; }
+.theme-pm25 .val-low { color:#1e88e5; }
+
+/* NOISE (είχε κοπεί η γραμμή) */
+.theme-noise .today-history-item{ border-color: rgba(0,0,0,.28); }
+.theme-noise .val-high{ color:#e53935; }
+.theme-noise .val-low { color:#1e88e5; }
+
+
+
 
 /* responsive για μικρές οθόνες */
 @media (max-width: 980px) {

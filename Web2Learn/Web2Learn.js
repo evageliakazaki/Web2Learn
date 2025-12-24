@@ -61,84 +61,139 @@ const getHistoricalReadings = async (deviceId, sensorId, from, to, rollup = "4h"
 
 // ✅ NEW: Fill today-card with last 5 days temperature
 // Requires HTML container: <div class="today-history-list"></div>
-async function updateTodayCardLastFiveDays(deviceId) {
-    const container = document.querySelector(".today-temperature-list");
-    if (!container) return;
+async function updateTodayCardLastFiveDays(
+  deviceId,
+  sensorId,
+  containerSelector,
+  unitSuffix = "",
+  useColors = false
+) {
+  const container = document.querySelector(containerSelector);
+  if (!container) return;
 
-    container.innerHTML = "";
+  container.innerHTML = "";
 
-    // === 1. Πάρε LIVE θερμοκρασία (για ΣΗΜΕΡΑ) ===
-    const liveData = await getSensorData(deviceId);
-    const tempSensor = liveData.sensors.find(s => s.id === SENSOR_MAPPING.TEMP_ID);
+  // helper: high/low για συγκεκριμένη μέρα
+  const getDayHighLow = async (dateKey, liveValue = null) => {
+    const d0 = new Date(dateKey);
+    d0.setHours(0, 0, 0, 0);
 
-    const today = new Date();
-    const todayKey = today.toISOString().split("T")[0];
+    const d1 = new Date(d0);
+    d1.setDate(d1.getDate() + 1);
 
-    const todayItem = tempSensor && tempSensor.value !== null
-        ? {
-            date: todayKey,
-            value: tempSensor.value,
-            isToday: true
-        }
-        : null;
+    const isoFrom = d0.toISOString().split("T")[0];
+    const isoTo = d1.toISOString().split("T")[0];
 
-    // === 2. Πάρε ΙΣΤΟΡΙΚΟ για τις προηγούμενες μέρες ===
-    const fromDate = new Date();
-    fromDate.setDate(today.getDate() - 5); // ζητάμε παραπάνω για ασφάλεια
-
-    const isoFrom = fromDate.toISOString().split("T")[0];
-    const isoTo = todayKey;
-
-    const tempDaily = await getHistoricalReadings(
-        deviceId,
-        SENSOR_MAPPING.TEMP_ID,
-        isoFrom,
-        isoTo,
-        "1d"
+    const readings = await getHistoricalReadings(
+      deviceId,
+      sensorId,        
+      isoFrom,
+      isoTo,
+      "4h"
     );
 
-    // === 3. Καθάρισμα history (ΧΩΡΙΣ τη σημερινή) ===
-    const historyItems = tempDaily
-        .filter(p => p && p[0] && p[1] !== null)
-        .map(p => ({
-            date: p[0].split("T")[0],
-            value: p[1],
-            isToday: false
-        }))
-        .filter(p => p.date !== todayKey) // ⚠️ κόβουμε το today αν υπάρχει
-        .sort((a, b) => b.date.localeCompare(a.date)) // DESC
-        .slice(0, 4); // μόνο 4 μέρες
+    let values = (readings || [])
+      .map(r => r?.[1])
+      .filter(v => v !== null && v !== undefined && !isNaN(v))
+      .map(Number);
 
-    // === 4. Συνδυασμός: Today + 4 προηγούμενες ===
-    const finalList = todayItem
-        ? [todayItem, ...historyItems]
-        : historyItems.slice(0, 5);
-
-    if (finalList.length === 0) {
-        container.innerHTML = "<p style='opacity:.7;'>No temperature history found.</p>";
-        return;
+    // αν είναι σήμερα, πρόσθεσε και live τιμή
+    if (liveValue !== null && liveValue !== undefined && !isNaN(liveValue)) {
+      values.push(Number(liveValue));
     }
 
-    // === 5. Render ===
-    finalList.forEach(item => {
-        const d = new Date(item.date);
+    if (values.length === 0) return { high: null, low: null };
 
-        const dayLabel = item.isToday
-            ? "Today"
-            : d.toLocaleDateString("en-US", { weekday: "short" });
+    return {
+      high: Math.max(...values),
+      low: Math.min(...values)
+    };
+  };
 
-        const dayNum = d.getDate();
+  // 1) live data για ΣΗΜΕΡΑ (για το ίδιο sensorId)
+  const liveData = await getSensorData(deviceId);
+  const liveSensor = liveData.sensors.find(s => s.id === sensorId); // ✅ σωστό sensor
+  const liveValue = (liveSensor && liveSensor.value !== null) ? Number(liveSensor.value) : null;
 
-        container.insertAdjacentHTML("beforeend", `
-            <div class="today-history-item ${item.isToday ? "today" : ""}">
-                <span class="day">${dayLabel} ${dayNum}</span>
-                <span class="temp">${Math.round(item.value)}°C</span>
-            </div>
-        `);
-    });
+  const today = new Date();
+  const todayKey = today.toISOString().split("T")[0];
+
+  const todayHL = await getDayHighLow(todayKey, liveValue);
+
+  const todayItem = (todayHL.high !== null && todayHL.low !== null)
+    ? { date: todayKey, high: todayHL.high, low: todayHL.low, isToday: true }
+    : null;
+
+  // 2) ημερομηνίες προηγούμενων ημερών
+  const fromDate = new Date();
+  fromDate.setDate(today.getDate() - 5);
+
+  const isoFrom = fromDate.toISOString().split("T")[0];
+  const isoTo = todayKey;
+
+  const daily = await getHistoricalReadings(
+    deviceId,
+    sensorId,       // ✅ σωστό sensor
+    isoFrom,
+    isoTo,
+    "1d"
+  );
+
+  const historyDates = (daily || [])
+    .filter(p => p && p[0])
+    .map(p => p[0].split("T")[0])
+    .filter(dateKey => dateKey !== todayKey)
+    .sort((a, b) => b.localeCompare(a))
+    .slice(0, 4);
+
+  const historyItems = await Promise.all(
+    historyDates.map(async (dateKey) => {
+      const hl = await getDayHighLow(dateKey, null);
+      return { date: dateKey, high: hl.high, low: hl.low, isToday: false };
+    })
+  );
+
+  const finalList = todayItem ? [todayItem, ...historyItems] : historyItems.slice(0, 5);
+
+  if (finalList.length === 0) {
+    container.innerHTML = "<p style='opacity:.7;'>No history found.</p>";
+    return;
+  }
+
+  // 3) render
+  finalList.forEach(item => {
+    const d = new Date(item.date);
+
+    const dayLabel = item.isToday
+      ? "Today"
+      : d.toLocaleDateString("en-US", { weekday: "short" });
+
+    const dayNum = d.getDate();
+
+const fmt = (n) => {
+  if (n === null || n === undefined) return "--";
+  const num = Math.round(n);
+  return unitSuffix
+    ? `${num}<span class="unit">${unitSuffix}</span>`
+    : `${num}`;
+};
+
+const highTxt = fmt(item.high);
+const lowTxt  = fmt(item.low);
+
+container.insertAdjacentHTML("beforeend", `
+  <div class="today-history-item ${item.isToday ? "today" : ""}">
+    <span class="day">${dayLabel} ${dayNum}</span>
+    <span class="vals">
+      <span class="val-high">${highTxt}</span>
+      <span class="val-low">${lowTxt}</span>
+    </span>
+  </div>
+`);
+
+
+  });
 }
-
-
 
 // ** 3. UPDATE HIGH / LOW WIDGET (Hero Section) **
 async function updateHighLow(deviceId, referenceDateStr, liveTempValue) {
@@ -187,120 +242,234 @@ async function updateHighLow(deviceId, referenceDateStr, liveTempValue) {
     if (lowEl) lowEl.innerHTML = `${Math.round(minTemp)}<sup>°C</sup>`;
 }
 
-
-// ** 4. UPDATE HISTORY LIST (THE DAY CARDS) - FIXED LAYOUT **
-async function updateHistorySection(deviceId) {
-    const historyContainer = document.querySelector(".history");
-    if (!historyContainer) return;
-
-    // A. Calculate dates: Today and 30 days ago
-    const toDate = new Date();
-    const fromDate = new Date();
-    fromDate.setDate(toDate.getDate() - 30);
-
-    const isoTo = toDate.toISOString().split('T')[0];
-    const isoFrom = fromDate.toISOString().split('T')[0];
-
-    // B. Fetch Data
-    const [tempData, humData, pm25Data, noiseData] = await Promise.all([
-        getHistoricalReadings(deviceId, SENSOR_MAPPING.TEMP_ID, isoFrom, isoTo, "1d"),
-        getHistoricalReadings(deviceId, SENSOR_MAPPING.HUMIDITY_ID, isoFrom, isoTo, "1d"),
-        getHistoricalReadings(deviceId, SENSOR_MAPPING.PM25_ID, isoFrom, isoTo, "1d"),
-        getHistoricalReadings(deviceId, SENSOR_MAPPING.NOISE_ID, isoFrom, isoTo, "1d")
-    ]);
-
-    // C. Group Data
-    const daysMap = {};
-    const processData = (data, key) => {
-        if (!data) return;
-        data.forEach(point => {
-            const dateKey = point[0].split('T')[0];
-            if (!daysMap[dateKey]) daysMap[dateKey] = { date: dateKey };
-            daysMap[dateKey][key] = point[1];
-        });
-    };
-
-    processData(tempData, 'temp');
-    processData(humData, 'hum');
-    processData(pm25Data, 'pm25');
-    processData(noiseData, 'noise');
-
-    // D. Sort Newest First
-    const sortedDays = Object.values(daysMap).sort((a, b) => b.date.localeCompare(a.date));
-
-    // E. Generate HTML
-    historyContainer.innerHTML = "";
-
-    if (sortedDays.length === 0) {
-        historyContainer.innerHTML = "<p style='text-align:center;'>No history data found.</p>";
-        return;
-    }
-
-    const greekMonths = ["ΙΑΝΟΥΑΡΙΟΥ", "ΦΕΒΡΟΥΑΡΙΟΥ", "ΜΑΡΤΙΟΥ", "ΑΠΡΙΛΙΟΥ", "ΜΑΙΟΥ", "ΙΟΥΝΙΟΥ", "ΙΟΥΛΙΟΥ", "ΑΥΓΟΥΣΤΟΥ", "ΣΕΠΤΕΜΒΡΙΟΥ", "ΟΚΤΩΒΡΙΟΥ", "ΝΟΕΜΒΡΙΟΥ", "ΔΕΚΕΜΒΡΙΟΥ"];
-    const greekDays = ["ΚΥΡΙΑΚΗ", "ΔΕΥΤΕΡΑ", "ΤΡΙΤΗ", "ΤΕΤΑΡΤΗ", "ΠΕΜΠΤΗ", "ΠΑΡΑΣΚΕΥΗ", "ΣΑΒΒΑΤΟ"];
-
-    sortedDays.forEach(day => {
-        if (day.temp === undefined || day.temp === null) return;
-
-        const d = new Date(day.date);
-        const dayNum = d.getDate();
-        const monthName = greekMonths[d.getMonth()];
-        const dayName = greekDays[d.getDay()];
-
-        const avgTemp = Math.round(day.temp);
-        const highTemp = avgTemp + 3;
-        const lowTemp = avgTemp - 2;
-        const hum = day.hum ? Math.round(day.hum) : "-";
-        const pm25 = day.pm25 ? Math.round(day.pm25) : "-";
-        const noise = day.noise ? Math.round(day.noise) : "-";
-
-        let icon = "weather images/sunny.png";
-        if (day.hum > 75) icon = "weather images/rain_cloud.png";
-        else if (day.hum > 50) icon = "weather images/cloud.png";
-
-        let tagClass = "tag-green";
-        let tagText = "ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ";
-
-        if (avgTemp > 25) {
-            tagClass = "tag-orange";
-            tagText = "ΥΨΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ";
-        } else if (avgTemp < 10) {
-            tagClass = "tag-blue";
-            tagText = "ΧΑΜΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ";
-        }
-
-        const html = `
-        <div class="day-card">
-            <span class="day-number">${dayNum}</span>
-
-            <div class="day-info">
-                <span class="month">${monthName}</span>
-                <span class="weekday">${dayName}</span>
-            </div>
-
-            <p class="sun-times">Ανατολή: 07:20 – Δύση: 17:03</p>
-
-            <div class="day-body">
-                <div class="icon-temp"><img src="${icon}" style="width:40px;"></div>
-                <div class="temp-box">
-                    <span class="temp-high">${highTemp}°C</span>
-                    <span class="temp-low">${lowTemp}°C</span>
-                </div>
-            </div>
-
-            <div class="metrics-row">
-                <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> ${pm25} µg/m³</span></div>
-                <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> ${hum}%</span></div>
-                <div class="metric"><span class="metric-label">Noise</span><span class="metric-value"> ${noise} dB</span></div>
-            </div>
-
-            <div class="tag ${tagClass}">${tagText}</div>
-        </div>
-        `;
-
-        historyContainer.insertAdjacentHTML('beforeend', html);
-    });
+// Sunrise/Sunset cache (για να μη βαράς το API 30 φορές χωρίς λόγο)
+// ====================== SUN API (cache) ======================
+// ====================== SEASON LOGIC (Limnos bands) ======================
+function seasonFromMonth(m) {
+  if ([11, 0, 1].includes(m)) return "winter";   // Dec–Feb
+  if ([2, 3, 4].includes(m)) return "spring";    // Mar–May
+  if ([5, 6, 7].includes(m)) return "summer";    // Jun–Aug
+  return "autumn";                               // Sep–Nov
 }
+
+const LIMNOS_BANDS = {
+  winter: { low: 6,  high: 14 },
+  spring: { low: 11, high: 22 },
+  summer: { low: 22, high: 31 },
+  autumn: { low: 13, high: 24 }
+};
+
+function getTempSeasonTagFromHL(high, low, dateKey) {
+  const d = new Date(`${dateKey}T00:00:00`);
+  const season = seasonFromMonth(d.getMonth());
+  const band = LIMNOS_BANDS[season];
+
+  const hi = Number(high);
+  const lo = Number(low);
+
+  // αν δεν έχουμε τιμές -> default
+  if (!Number.isFinite(hi) || !Number.isFinite(lo)) {
+    return { tagClass: "tag-green", tagText: "ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ ΓΙΑ ΤΗΝ ΕΠΟΧΗ" };
+  }
+
+  // representative = μέση τιμή από high/low (πιο “τίμια” από rollup avg)
+  const mid = (hi + lo) / 2;
+
+  if (mid < band.low) {
+    return { tagClass: "tag-blue", tagText: "ΧΑΜΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ ΓΙΑ ΤΗΝ ΕΠΟΧΗ" };
+  }
+  if (mid > band.high) {
+    return { tagClass: "tag-orange", tagText: "ΥΨΗΛΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ ΓΙΑ ΤΗΝ ΕΠΟΧΗ" };
+  }
+  return { tagClass: "tag-green", tagText: "ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ ΓΙΑ ΤΗΝ ΕΠΟΧΗ" };
+}
+
+
+
+// ====================== SUNRISE / SUNSET ======================
+const sunCache = new Map();
+
+async function getSunTimes(lat, lon, dateKey, timeZone = "Europe/Athens") {
+  if (lat == null || lon == null) return null;
+
+  const nLat = Number(lat);
+  const nLon = Number(lon);
+  if (!Number.isFinite(nLat) || !Number.isFinite(nLon)) return null;
+
+  const cacheKey = `${nLat},${nLon},${dateKey}`;
+  if (sunCache.has(cacheKey)) return sunCache.get(cacheKey);
+
+  const url = `https://api.sunrise-sunset.org/json?lat=${nLat}&lng=${nLon}&date=${dateKey}&formatted=0`;
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Sun API error");
+    const json = await res.json();
+
+    const r = json?.results;
+    if (!r?.sunrise || !r?.sunset) return null;
+
+    // επιστρέφει UTC -> εμφάνιση Europe/Athens
+    const sunrise = new Date(r.sunrise).toLocaleTimeString("el-GR", {
+      timeZone,
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+
+    const sunset = new Date(r.sunset).toLocaleTimeString("el-GR", {
+      timeZone,
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+
+    const out = { sunrise, sunset };
+    sunCache.set(cacheKey, out);
+    return out;
+  } catch (e) {
+    return null;
+  }
+}
+
+// ====================== REAL DAY HIGH/LOW FROM READINGS ======================
+async function getDayHighLow(deviceId, dateKey) {
+  const d0 = new Date(`${dateKey}T00:00:00Z`); // σταθερό UTC
+  const d1 = new Date(d0);
+  d1.setUTCDate(d1.getUTCDate() + 1);
+
+  const isoFrom = d0.toISOString().slice(0, 10);
+  const isoTo = d1.toISOString().slice(0, 10);
+
+  const readings = await getHistoricalReadings(
+    deviceId,
+    SENSOR_MAPPING.TEMP_ID,
+    isoFrom,
+    isoTo,
+    "4h"
+  );
+
+  const values = (readings || [])
+    .map(r => Number(r?.[1]))
+    .filter(v => Number.isFinite(v));
+
+  if (!values.length) return { high: null, low: null };
+  return { high: Math.max(...values), low: Math.min(...values) };
+}
+
+// ====================== HISTORY SECTION (season-aware tags) ======================
+async function updateHistorySection(deviceId) {
+  const historyContainer = document.querySelector(".history");
+  if (!historyContainer) return;
+
+  const toDate = new Date();
+  const fromDate = new Date();
+  fromDate.setDate(toDate.getDate() - 30);
+
+  const isoTo = toDate.toISOString().slice(0, 10);
+  const isoFrom = fromDate.toISOString().slice(0, 10);
+
+  const [tempData, humData, pm25Data, noiseData] = await Promise.all([
+    getHistoricalReadings(deviceId, SENSOR_MAPPING.TEMP_ID, isoFrom, isoTo, "1d"),
+    getHistoricalReadings(deviceId, SENSOR_MAPPING.HUMIDITY_ID, isoFrom, isoTo, "1d"),
+    getHistoricalReadings(deviceId, SENSOR_MAPPING.PM25_ID, isoFrom, isoTo, "1d"),
+    getHistoricalReadings(deviceId, SENSOR_MAPPING.NOISE_ID, isoFrom, isoTo, "1d"),
+  ]);
+
+  const daysMap = {};
+  const processData = (data, key) => {
+    (data || []).forEach(point => {
+      if (!point?.[0]) return;
+      const dateKey = point[0].split("T")[0];
+      if (!daysMap[dateKey]) daysMap[dateKey] = { date: dateKey };
+      daysMap[dateKey][key] = point[1];
+    });
+  };
+
+  processData(tempData, "temp");
+  processData(humData, "hum");
+  processData(pm25Data, "pm25");
+  processData(noiseData, "noise");
+
+  const sortedDays = Object.values(daysMap)
+    .filter(d => d.temp !== undefined && d.temp !== null)
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  historyContainer.innerHTML = "";
+  if (!sortedDays.length) {
+    historyContainer.innerHTML = "<p style='text-align:center;'>No history data found.</p>";
+    return;
+  }
+
+  const live = await getSensorData(deviceId);
+  const lat = live?.info?.latitude;
+  const lon = live?.info?.longitude;
+
+  const greekMonths = ["ΙΑΝΟΥΑΡΙΟΥ","ΦΕΒΡΟΥΑΡΙΟΥ","ΜΑΡΤΙΟΥ","ΑΠΡΙΛΙΟΥ","ΜΑΙΟΥ","ΙΟΥΝΙΟΥ","ΙΟΥΛΙΟΥ","ΑΥΓΟΥΣΤΟΥ","ΣΕΠΤΕΜΒΡΙΟΥ","ΟΚΤΩΒΡΙΟΥ","ΝΟΕΜΒΡΙΟΥ","ΔΕΚΕΜΒΡΙΟΥ"];
+  const greekDays = ["ΚΥΡΙΑΚΗ","ΔΕΥΤΕΡΑ","ΤΡΙΤΗ","ΤΕΤΑΡΤΗ","ΠΕΜΠΤΗ","ΠΑΡΑΣΚΕΥΗ","ΣΑΒΒΑΤΟ"];
+
+  for (const day of sortedDays) {
+    const dateKey = day.date;
+
+    const d = new Date(`${dateKey}T00:00:00`);
+    const dayNum = d.getDate();
+    const monthName = greekMonths[d.getMonth()];
+    const dayName = greekDays[d.getDay()];
+
+    const hl = await getDayHighLow(deviceId, dateKey);
+    const highTemp = hl.high !== null ? Math.round(hl.high) : "--";
+    const lowTemp = hl.low !== null ? Math.round(hl.low) : "--";
+
+    // ✅ ΕΔΩ: εποχικό tag για Λήμνο
+   const { tagClass, tagText } = getTempSeasonTagFromHL(highTemp, lowTemp, dateKey);
+
+
+    const sun = await getSunTimes(lat, lon, dateKey);
+    const sunText = sun
+      ? `Ανατολή: ${sun.sunrise} – Δύση: ${sun.sunset}`
+      : `Ανατολή: --:-- – Δύση: --:--`;
+
+    const hum = day.hum !== undefined && day.hum !== null ? Math.round(day.hum) : "-";
+    const pm25 = day.pm25 !== undefined && day.pm25 !== null ? Math.round(day.pm25) : "-";
+    const noise = day.noise !== undefined && day.noise !== null ? Math.round(day.noise) : "-";
+
+    let icon = "weather images/sunny.png";
+    const humN = Number(day.hum);
+    if (Number.isFinite(humN) && humN > 75) icon = "weather images/rain_cloud.png";
+    else if (Number.isFinite(humN) && humN > 50) icon = "weather images/cloud.png";
+
+    historyContainer.insertAdjacentHTML("beforeend", `
+      <div class="day-card">
+        <span class="day-number">${dayNum}</span>
+
+        <div class="day-info">
+          <span class="month">${monthName}</span>
+          <span class="weekday">${dayName}</span>
+        </div>
+
+        <p class="sun-times">${sunText}</p>
+
+        <div class="day-body">
+          <div class="icon-temp"><img src="${icon}" style="width:40px;"></div>
+          <div class="temp-box">
+            <span class="temp-high">${highTemp}°C</span>
+            <span class="temp-low">${lowTemp}°C</span>
+          </div>
+        </div>
+
+        <div class="metrics-row">
+          <div class="metric"><span class="metric-label">PM2.5</span><span class="metric-value"> ${pm25} µg/m³</span></div>
+          <div class="metric"><span class="metric-label">Humidity</span><span class="metric-value"> ${hum}%</span></div>
+          <div class="metric"><span class="metric-label">Noise</span><span class="metric-value"> ${noise} dB</span></div>
+        </div>
+
+        <div class="tag ${tagClass}">${tagText}</div>
+      </div>
+    `);
+  }
+}
+
+
 
 // ** 5. UPDATE TEMP BAR WIDGET **
 function updateTempWidget(tempValue) {
@@ -585,7 +754,11 @@ async function updateDashboard() {
         await updateHistorySection(deviceId);
 
         // ✅ NEW: Update today-card with last 5 days temperature
-        await updateTodayCardLastFiveDays(deviceId);
+        await updateTodayCardLastFiveDays(deviceId, SENSOR_MAPPING.TEMP_ID, ".today-temperature-list", "°C", true);
+        await updateTodayCardLastFiveDays(deviceId, SENSOR_MAPPING.HUMIDITY_ID, ".today-humidity-list", "%",true);
+        await updateTodayCardLastFiveDays(deviceId, SENSOR_MAPPING.PM25_ID, ".today-pm25-list", " µg/m³",true);
+        await updateTodayCardLastFiveDays(deviceId, SENSOR_MAPPING.NOISE_ID, ".today-noise-list", " dB",true);
+
 
     } else {
         console.warn("No live sensor data found.");

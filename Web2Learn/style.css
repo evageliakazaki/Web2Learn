@@ -55,18 +55,21 @@ main {
 }
 
 .hero {
-    background: transparent;
-    border-radius: 0;
-    padding: 20px 20px 0;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    text-align: center;
-    box-shadow: none;
-    grid-column: 1;
-    grid-row: 2;
-    height: 100%;
+  background: transparent;
+  border-radius: 0;
+  padding: 10px 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  box-shadow: none;
+  grid-column: 1;
+  grid-row: 2;
+  height: auto;       /* να μην τεντώνεται όσο το history */
+  gap: 12px;          /* μικρό κενό ανάμεσα στα παιδιά */
 }
+
 
 .btn-back-map {
     position: absolute;
@@ -112,39 +115,42 @@ main {
 }
 
 .condition {
-    display: grid;
-    grid-column: 1;
-    grid-row: 2;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    margin-top: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 200px;   
 }
 
 .condition img {
-    margin-top: 0px;
-    width: 90px;
+  margin-top: 0;
+  width: 90px;
 }
 
 .condition p {
-    font-size: large;
-    font-weight: 400;
-    margin-top: 15px;
+  font-size: large;
+  font-weight: 400;
+  margin-top: 10px;
 }
 
+
 .highlow-box {
-    background: linear-gradient(to right, #DE6150, #D3B353);
-    border-radius: 16px;
-    padding: 20px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    color: white;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    margin-top: 10px;
+  background: linear-gradient(to right, #DE6150, #D3B353);
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  color: white;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  margin-top: 200px;   
+
+  width: 320px;          
+  max-width: 90vw; 
 }
+
 
 .highlow-box .temp {
     font-size: 32px;
@@ -264,7 +270,6 @@ main {
 }
 
 /* === TODAY HISTORY (Last 5 Days) -> 5 τετραγωνάκια μέσα στο πράσινο === */
-/* σωστό selector (λείπει τελεία) */
 .today-history h4{
   font-size: 1.05rem;
   font-weight: 800;
@@ -272,15 +277,47 @@ main {
   letter-spacing: 0.2px;
 }
 
+/* === LISTΕΣ 5 ΗΜΕΡΩΝ === */
 .today-temperature-list,
 .today-humidity-list,
 .today-pm25-list,
-.today-noise-list{
+.today-noise-list {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(120px, 1fr));
   gap: 12px;
   align-items: stretch;
 }
+
+/* medium οθόνες – 4 κάρτες ανά σειρά */
+@media (max-width: 1200px) {
+  .today-temperature-list,
+  .today-humidity-list,
+  .today-pm25-list,
+  .today-noise-list {
+    grid-template-columns: repeat(4, minmax(120px, 1fr));
+  }
+}
+
+/* tablets – 3 κάρτες ανά σειρά */
+@media (max-width: 900px) {
+  .today-temperature-list,
+  .today-humidity-list,
+  .today-pm25-list,
+  .today-noise-list {
+    grid-template-columns: repeat(3, minmax(120px, 1fr));
+  }
+}
+
+/* κινητά – 2 κάρτες ανά σειρά */
+@media (max-width: 600px) {
+  .today-temperature-list,
+  .today-humidity-list,
+  .today-pm25-list,
+  .today-noise-list {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+  }
+}
+
 
 .today-history-item{
   background: rgba(255, 255, 255, 0.55);
@@ -302,13 +339,15 @@ main {
   opacity: 0.85;
 }
 
-/* ΕΣΥ renderάρεις .vals (όχι .temp) */
 .today-history-item .vals{
   display: flex;
-  gap: 10px;
+  flex-wrap: wrap;         
+  justify-content: center;
+  gap: 4px 8px;
   font-weight: 900;
   font-size: 1.25rem;
 }
+
 
 /* TEMPERATURE */
 .theme-temp .today-history-item{ border-color: rgba(0,0,0,.35); }
@@ -738,9 +777,9 @@ main {
 
 /* Κοντέινερ θερμομέτρου */
 .temp-bar-widget {
-    width: 220px;
-    margin: 20px auto 10px;
-    text-align: center;
+  width: 220px;
+  margin: 10px auto 4px;     /* λιγότερο κενό κάτω */
+  text-align: center;
 }
 
 .temp-bar-labels {
@@ -797,3 +836,247 @@ main {
     width: auto;
     object-fit: contain;
 }
+
+/* ====== 1. Μεγάλα tablets / μικρά laptop (κάτω από 1200px) ====== */
+@media (max-width: 1200px) {
+  main {
+    grid-template-columns: 1fr 1.4fr;
+    column-gap: 16px;
+  }
+
+  .logo {
+    font-size: 2rem;
+    padding-left: 30px;
+  }
+
+  .logo-img {
+    height: 120px;
+  }
+
+  .highlights {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ====== 2. Tablets / portrait οθόνες (κάτω από 900px) ====== */
+@media (max-width: 900px) {
+  header {
+    flex-wrap: wrap;
+    padding: 12px 16px;
+    padding-right: 120px;
+  }
+
+  .logo {
+    font-size: 1.7rem;
+    padding-left: 10px;
+  }
+
+  .logo-img {
+    height: 90px;
+  }
+
+  main {
+    grid-template-columns: 1fr;   /* Ολα σε μία στήλη */
+    grid-template-rows: auto auto auto;
+  }
+
+  .hero {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .today-panel {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .highlights {
+    grid-column: 1;
+    grid-row: 4;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 40px;
+  }
+
+  .condition {
+    margin-top: 120px; /* πιο μικρό κενό σε μικρές οθόνες */
+  }
+
+  .day-card {
+    grid-template-columns: 130px minmax(0, 1fr);
+  }
+}
+
+/* ====== 3. Κινητά (κάτω από 600px) ====== */
+@media (max-width: 600px) {
+  html, body {
+    overflow-x: hidden;
+  }
+
+  main {
+    padding: 0 10px 16px;
+  }
+
+  header {
+    padding: 10px;
+    padding-right: 80px;
+  }
+
+  .btn-back-map {
+    right: 8px;
+    padding: 4px 10px;
+    font-size: 0.7rem;
+  }
+
+  .logo {
+    font-size: 1.4rem;
+  }
+
+  .logo-img {
+    height: 70px;
+  }
+
+  .temp-bar-widget {
+    width: 100%;
+  }
+
+  .today-card {
+    padding: 20px 16px;
+  }
+
+  .today-temperature-list,
+  .today-humidity-list,
+  .today-pm25-list,
+  .today-noise-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* 2 κάρτες ανά σειρά */
+  }
+
+  .highlights {
+    grid-template-columns: 1fr;  /* 1 κάρτα ανά σειρά */
+  }
+
+  .day-card {
+    grid-template-columns: 1fr;  /* Σπάει σε στήλες */
+    row-gap: 8px;
+  }
+
+  .metrics-row {
+    grid-template-columns: 1fr 1fr; /* 2 μετρήσεις ανά σειρά */
+  }
+
+  .condition {
+    margin-top: 80px;
+  }
+}
+
+/* ΕΠΙΔΙΟΡΘΩΣΗ Το NOISE εξαφανίζεται / κολλάει */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(80px, 1fr));
+  gap: 12px;
+  align-items: center;
+}
+
+.metric-value {
+  white-space: normal !important;
+  display: block;
+}
+
+/* --- Κινητά --- */
+@media(max-width: 600px) {
+  .metrics-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* 2 ανα σειρά */
+  }
+}
+/* ====== History layout για πιο στενά παράθυρα ====== */
+
+/* 1) Κάτω από 1100px – λίγο πιο στενή 3-στήλη διάταξη */
+@media (max-width: 1100px) {
+  .day-card {
+    grid-template-columns: 130px minmax(0, 1fr) 200px;
+  }
+}
+
+/* 2) Κάτω από 950px – η κάρτα History γίνεται 2 ζώνες,
+      το tag πάει κάτω από τις μετρήσεις */
+@media (max-width: 950px) {
+  .day-card {
+    grid-template-columns: 130px minmax(0, 1fr);
+    grid-auto-rows: auto;
+  }
+
+  .day-card .tag {
+    justify-self: flex-start;
+    margin-top: 4px;
+  }
+}
+
+/* 3) Κάτω από 750px – τελείως κάθετη κάρτα + οι μετρήσεις σε 2 στήλες
+      (ώστε το NOISE και το dB να μη στριμώχνονται) */
+@media (max-width: 750px) {
+  .day-card {
+    grid-template-columns: 1fr;
+    row-gap: 8px;
+  }
+
+  .day-body {
+    justify-content: flex-start;
+  }
+
+  .metrics-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Κάτω από 1200px – λίγο μικρότερο κενό */
+@media (max-width: 1200px) {
+  .condition {
+    margin-top: 140px;
+  }
+
+  .highlow-box {
+    margin-top: 140px;
+  }
+}
+
+/* Κάτω από 900px – ακόμα μικρότερο */
+@media (max-width: 900px) {
+  .condition {
+    margin-top: 100px;
+  }
+
+  .highlow-box {
+    margin-top: 110px;
+  }
+}
+
+/* Κάτω από 600px – μικρή οθόνη / tablet σε split view κτλ */
+@media (max-width: 600px) {
+  .condition {
+    margin-top: 70px;
+  }
+
+  .highlow-box {
+    margin-top: 80px;
+    width: 90vw;      /* να ανοίγει σχεδόν όσο η οθόνη */
+  }
+}
+
+/* HIGH/LOW box responsive spacing */
+@media (max-width: 1200px) {
+  .highlow-box {
+    margin-bottom: 60px; /* extra space */
+  }
+}
+
+@media (max-width: 900px) {
+  .highlow-box {
+    margin-bottom: 80px;
+  }
+}
+
+@media (max-width: 600px) {
+  .highlow-box {
+    margin-bottom: 110px; /* κινητό = πιο πολύ κενό */
+  }
+}
+

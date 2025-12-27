@@ -1,91 +1,182 @@
 /* RESET */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 html,
 body {
-    height: 100%;
+  height: 100%;
 }
 
 /* BODY */
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: linear-gradient(to top, #34838F, #A3D7DC);
-    color: white;
-    display: flex;
-    flex-direction: column;
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(to top, #34838F, #A3D7DC);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 /* HERO SECTION */
 .hero-section {
-    margin-bottom: 8px;
+  margin-bottom: 8px;
 }
 
 .hero {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    /* title left, logo right */
-    padding: 18px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* title left, logo right */
+  padding: 18px 28px;
 }
 
 /* TITLE — LEFT */
 .hero h1 {
-    font-size: 2.5rem;
-    line-height: 1.2;
-    margin: 0;
-    text-align: left;
+  font-size: 2.5rem;
+  line-height: 1.2;
+  margin: 0;
+  text-align: left;
 }
 
 /* LOGO — RIGHT */
 .hero-logo {
-    height: 150px;
-    /* visible but not overpowering */
-    width: 150px;
+  height: 150px;
+  width: 150px;
 }
 
 /* DESCRIPTION */
 .hero-description {
-    padding: 6px 28px;
-    margin-top: -25px;
-    line-height: 1.4;
-    font-size: 1.1rem;
+  padding: 6px 28px;
+  margin-top: -25px;
+  line-height: 1.4;
+  font-size: 1.1rem;
 }
 
 /* SENSOR SELECT */
 .sensor-select-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    margin: 10px 0;
-    font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+  font-size: 18px;
 }
 
 .sensor-select-wrapper label {
-    font-weight: 500;
+  font-weight: 500;
 }
 
 #sensorSelect {
-    padding: 4px 10px;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.7);
-    background: rgba(255, 255, 255, 0.9);
-    color: #333;
-    font-size: 0.85rem;
-    outline: none;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  font-size: 0.85rem;
+  outline: none;
 }
 
 /* MAP */
 #map {
-    width: 100%;
-    flex: 1;
-    overflow: hidden;
+  width: 100%;
+  flex: 1;
+  overflow: hidden;
 }
 
 .leaflet-container {
-    border-radius: 12px;
+  border-radius: 12px;
+}
+
+/* ================== RESPONSIVE BREAKPOINTS ================== */
+
+/* Μεσαίες οθόνες (laptop / tablet landscape) */
+@media (max-width: 1024px) {
+  .hero {
+    padding: 16px 20px;
+  }
+
+  .hero h1 {
+    font-size: 2.1rem;
+  }
+
+  .hero-logo {
+    height: 120px;
+    width: 120px;
+  }
+
+  .hero-description {
+    padding: 6px 20px;
+    margin-top: -18px;
+    font-size: 1rem;
+  }
+
+  .sensor-select-wrapper {
+    font-size: 16px;
+  }
+}
+
+/* Tablets / μικρά laptop */
+@media (max-width: 768px) {
+  .hero {
+    padding: 14px 18px;
+    flex-direction: column;         /* τίτλος πάνω, logo κάτω */
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .hero h1 {
+    font-size: 1.9rem;
+    text-align: left;
+  }
+
+  .hero-logo {
+    height: 100px;
+    width: 100px;
+  }
+
+  .hero-description {
+    padding: 4px 18px;
+    margin-top: -8px;
+    font-size: 0.95rem;
+  }
+
+  .sensor-select-wrapper {
+    flex-direction: column;
+    font-size: 15px;
+    gap: 4px;
+  }
+}
+
+/* Κινητά */
+@media (max-width: 480px) {
+  .hero {
+    padding: 12px 12px;
+  }
+
+  .hero h1 {
+    font-size: 1.5rem;
+  }
+
+  .hero-logo {
+    height: 70px;
+    width: 70px;
+  }
+
+  .hero-description {
+    padding: 4px 12px;
+    margin-top: -4px;
+    font-size: 0.85rem;
+    text-align: left;
+  }
+
+  .sensor-select-wrapper {
+    font-size: 14px;
+  }
+
+  #sensorSelect {
+    width: 80%;
+    max-width: 260px;
+  }
 }

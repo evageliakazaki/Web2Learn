@@ -59,7 +59,7 @@ const getHistoricalReadings = async (deviceId, sensorId, from, to, rollup = "4h"
     }
 };
 
-// ✅ NEW: Fill today-card with last 5 days temperature
+// NEW: Fill today-card with last 5 days temperature
 // Requires HTML container: <div class="today-history-list"></div>
 async function updateTodayCardLastFiveDays(
   deviceId,
@@ -133,7 +133,7 @@ async function updateTodayCardLastFiveDays(
 
   const daily = await getHistoricalReadings(
     deviceId,
-    sensorId,       // ✅ σωστό sensor
+    sensorId,       
     isoFrom,
     isoTo,
     "1d"
@@ -224,7 +224,7 @@ async function updateHighLow(deviceId, referenceDateStr, liveTempValue) {
         .map(r => r[1])
         .filter(v => v !== null && v !== undefined);
 
-    // ✅ ΣΗΜΑΝΤΙΚΟ: Αν είναι σήμερα, πρόσθεσε το live temp
+   
     if (isToday && liveTempValue !== null && liveTempValue !== undefined) {
         values.push(liveTempValue);
     }
@@ -267,7 +267,7 @@ function getTempSeasonTagFromHL(high, low, dateKey) {
   const hi = Number(high);
   const lo = Number(low);
 
-  // αν δεν έχουμε τιμές -> default
+  
   if (!Number.isFinite(hi) || !Number.isFinite(lo)) {
     return { tagClass: "tag-green", tagText: "ΚΑΝΟΝΙΚΕΣ ΘΕΡΜΟΚΡΑΣΙΕΣ ΓΙΑ ΤΗΝ ΕΠΟΧΗ" };
   }
@@ -420,7 +420,7 @@ async function updateHistorySection(deviceId) {
     const highTemp = hl.high !== null ? Math.round(hl.high) : "--";
     const lowTemp = hl.low !== null ? Math.round(hl.low) : "--";
 
-    // ✅ ΕΔΩ: εποχικό tag για Λήμνο
+   
    const { tagClass, tagText } = getTempSeasonTagFromHL(highTemp, lowTemp, dateKey);
 
 
@@ -472,23 +472,32 @@ async function updateHistorySection(deviceId) {
 
 
 // ** 5. UPDATE TEMP BAR WIDGET **
-function updateTempWidget(tempValue) {
-    const widget = document.querySelector(".temp-bar-widget");
-    if (!widget || tempValue === null || tempValue === undefined || isNaN(tempValue)) return;
+// ** 5. UPDATE TEMP BAR WIDGET **
+function updateTempWidget(tempValue, labelText) {
+  const widget = document.querySelector(".temp-bar-widget");
+  if (!widget || tempValue == null || isNaN(tempValue)) return;
 
-    const valEl = widget.querySelector(".temp-bar-value");
-    if (valEl) valEl.textContent = `${Math.round(tempValue)}°C`;
+  const valEl = widget.querySelector(".temp-bar-value");
+  if (valEl) {
+    // αν μου δώσεις έτοιμο κείμενο από τα highlights, το βάζω όπως είναι
+    // αλλιώς κρατάω το παλιό round
+    const txt = (labelText !== undefined && labelText !== null)
+      ? labelText
+      : `${Math.round(tempValue)}°C`;
+    valEl.textContent = txt;
+  }
 
-    const MIN_TEMP = -5;
-    const MAX_TEMP = 45;
-    let percentage = ((tempValue - MIN_TEMP) / (MAX_TEMP - MIN_TEMP)) * 100;
-    percentage = Math.max(0, Math.min(100, percentage));
+  const MIN_TEMP = -5;
+  const MAX_TEMP = 45;
+  let percentage = ((tempValue - MIN_TEMP) / (MAX_TEMP - MIN_TEMP)) * 100;
+  percentage = Math.max(0, Math.min(100, percentage));
 
-    const knob = widget.querySelector(".temp-bar-knob");
-    if (knob) {
-        knob.style.left = `${percentage}%`;
-    }
+  const knob = widget.querySelector(".temp-bar-knob");
+  if (knob) {
+    knob.style.left = `${percentage}%`;
+  }
 }
+
 
 // ** 6. UPDATE CONDITION WIDGET **
 function updateWeatherCondition(sensorData) {
@@ -524,6 +533,13 @@ function updateWeatherCondition(sensorData) {
     }
 }
 
+function prettyUnit(unit) {
+  if (!unit) return "";
+  if (unit === "ug/m3") return " µg/m³";  // μετατροπή μόνο για PM2.5
+  return " " + unit;
+}
+
+
 // ** 7. UPDATE HIGHLIGHT CARDS **
 function updateHighlights(sensorData) {
     const cards = document.querySelectorAll(".highlights .card");
@@ -555,6 +571,15 @@ function updateHighlights(sensorData) {
                 : value.toFixed(1);
 
         valueElement.textContent = displayValue + (sensor.unit || "");
+        valueElement.textContent = displayValue + prettyUnit(sensor.unit);
+
+        const finalText = displayValue + prettyUnit(sensor.unit);
+        valueElement.textContent = finalText;
+
+        if (type === "temp") {
+          updateTempWidget(value, finalText);
+        }
+
 
         // Remove ALL possible color classes first
         card.classList.remove(
@@ -668,29 +693,33 @@ function applyMetric(metricKey, sensorData) {
 
 // ** 9. UPDATE AUXILIARY DATA **
 function applyRealtimeData(sensorData) {
-    const temp = sensorData.find(s => s.id === SENSOR_MAPPING.TEMP_ID);
-    const hum = sensorData.find(s => s.id === SENSOR_MAPPING.HUMIDITY_ID);
-    const pm25 = sensorData.find(s => s.id === SENSOR_MAPPING.PM25_ID);
-    const noise = sensorData.find(s => s.id === SENSOR_MAPPING.NOISE_ID);
+  const temp = sensorData.find(s => s.id === SENSOR_MAPPING.TEMP_ID);
+  const hum = sensorData.find(s => s.id === SENSOR_MAPPING.HUMIDITY_ID);
+  const pm25 = sensorData.find(s => s.id === SENSOR_MAPPING.PM25_ID);
+  const noise = sensorData.find(s => s.id === SENSOR_MAPPING.NOISE_ID);
 
-    if (temp && temp.value !== null) {
-        const el = document.getElementById("today-temp");
-        if (el) el.textContent = Math.round(temp.value) + "°C";
-        updateTempWidget(parseFloat(temp.value));
-    }
-    if (hum && hum.value !== null) {
-        const el = document.getElementById("today-humidity");
-        if (el) el.textContent = Math.round(hum.value) + "%";
-    }
-    if (pm25 && pm25.value !== null) {
-        const pmEl = document.getElementById("today-pm25");
-        if (pmEl) pmEl.textContent = Math.round(pm25.value) + " µg/m³";
-    }
-    if (noise && noise.value !== null) {
-        const uvEl = document.getElementById("today-uv");
-        if (uvEl) uvEl.textContent = Math.round(noise.value) + " dB";
-    }
+  if (temp && temp.value !== null) {
+    const el = document.getElementById("today-temp");
+    if (el) el.textContent = Math.round(temp.value) + "°C";
+    
+  }
+
+  if (hum && hum.value !== null) {
+    const el = document.getElementById("today-humidity");
+    if (el) el.textContent = Math.round(hum.value) + "%";
+  }
+
+  if (pm25 && pm25.value !== null) {
+    const pmEl = document.getElementById("today-pm25");
+    if (pmEl) pmEl.textContent = Math.round(pm25.value) + " µg/m³";
+  }
+
+  if (noise && noise.value !== null) {
+    const uvEl = document.getElementById("today-uv");
+    if (uvEl) uvEl.textContent = Math.round(noise.value) + " dB";
+  }
 }
+
 
 // ** MAIN RUNNER **
 async function updateDashboard() {
@@ -721,7 +750,7 @@ async function updateDashboard() {
         const liveTempValue = tempSensor ? parseFloat(tempSensor.value) : null;
 
 
-        // ✅ SAFE GUARD: today-panel might not exist on some pages
+        // SAFE GUARD: today-panel might not exist on some pages
         const todayBox = document.querySelector(".today-panel");
         if (todayBox) {
             const titleToggles = todayBox.querySelectorAll(".title-toggle");
